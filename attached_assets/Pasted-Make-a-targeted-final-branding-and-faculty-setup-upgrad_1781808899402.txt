@@ -1,0 +1,179 @@
+Make a targeted final branding and faculty setup upgrade to the existing CoursePulse AI app. Do not rebuild the app from scratch and do not remove any existing working features.
+
+Use NYU Violet as the primary brand color:
+
+* Primary purple: #57068C
+* Deep purple for hover/dark accents: #330662
+* Light purple background/tint: #EEE6F3
+* White: #FFFFFF
+* Dark text: #1F1F1F
+* Neutral gray: #6D6D6D
+
+Important branding rule:
+Use an NYU-inspired purple palette, but do not copy or recreate NYU’s official torch logo or official NYU seal. CoursePulse AI should have its own simple logo.
+
+Part 1: CoursePulse AI logo
+
+Create a simple CoursePulse AI logo using the NYU Violet color palette.
+
+Logo concept:
+
+* A small pulse/wave icon or circular “pulse” mark
+* Text: CoursePulse AI
+* Optional small tagline: Responsible Learning Intelligence
+
+Use the logo in:
+
+* Landing page header
+* Student portal header
+* Faculty layout/header
+* Governance page
+* Report page
+* Footer if appropriate
+
+The logo should feel:
+
+* Academic
+* Clean
+* Responsible AI-focused
+* Modern but not flashy
+
+Part 2: Make role buttons clearly clickable
+
+Improve the landing page role selector so users can immediately tell the options are buttons/cards.
+
+Make the three entry options visually distinct:
+
+Student Reflection Portal:
+
+* Use a lighter blue/teal or light purple-tinted card
+* Add a student/user icon if available
+* Button should say: Enter Student Portal
+
+Faculty Dashboard:
+
+* Use NYU Violet #57068C as the dominant button/card color
+* Add a dashboard/chart icon if available
+* Button should say: Enter Faculty Dashboard
+
+Governance Note:
+
+* Use neutral slate/gray styling
+* Add a shield/check icon if available
+* Button should say: View Governance Note
+
+Button/card requirements:
+
+* Strong contrast
+* Clear hover states
+* Rounded corners
+* Proper spacing
+* Cursor pointer
+* Accessible text contrast
+* Looks clickable on desktop and mobile
+
+Part 3: Add faculty syllabus upload feature
+
+Add a faculty syllabus upload feature so professors do not have to type every week manually.
+
+Add new faculty route:
+
+* /faculty/syllabus-upload
+
+Add navigation label:
+
+* Syllabus Upload
+
+This page should only be available after faculty access, same as the other faculty pages.
+
+Purpose:
+Faculty can upload a syllabus document, CoursePulse extracts draft course context, and the professor reviews/edits before importing.
+
+Upload requirements:
+
+* Accept .docx files for the MVP
+* If easy, also accept .txt files as a fallback
+* Do not require PDF parsing unless it is simple and reliable
+* Add note: “Uploaded syllabus content is used only to help create course context. Faculty must review and approve extracted items before import.”
+
+Backend:
+
+* Add an upload endpoint for syllabus files
+* If this is a Node/TypeScript backend, use a reliable package such as mammoth to extract text from .docx files
+* If this is a Python backend, use python-docx
+* Extract raw text
+* Parse likely course context rows
+
+Suggested fields to extract:
+
+* Week
+* Topic
+* Learning objective
+* Reading
+* Assignment
+
+Use simple heuristic parsing:
+
+* Detect “Week 1,” “Week 2,” “Module 1,” etc.
+* Detect nearby topic titles
+* Detect “Learning Objective,” “Objective,” “Students will be able to,” or “By the end of this week”
+* Detect “Reading,” “Readings,” “Article,” “Chapter”
+* Detect “Assignment,” “Lab,” “Workshop,” “Project,” “Deliverable”
+
+Important:
+Do not automatically overwrite existing course context.
+
+After upload, show a review screen titled:
+Review Extracted Course Context
+
+The review table should allow faculty to:
+
+* Edit extracted rows
+* Delete incorrect rows
+* Add missing rows manually
+* Click “Import to Course Context”
+
+After import:
+
+* Save approved rows to the course_context table
+* Show a success confirmation
+* Link back to Course Context editor
+
+Data safety:
+
+* Do not permanently store the original syllabus file unless necessary
+* Store only extracted and faculty-approved course context rows
+* Add a responsible use note explaining that syllabus content is used only to map reflections to course topics and learning objectives
+
+Part 4: Improve Course Context page
+
+On the Course Context page, add two setup options at the top:
+
+1. Manage Course Context Manually
+2. Upload Syllabus to Generate Draft Context
+
+Make clear that syllabus upload is optional and faculty must review extracted data before import.
+
+Part 5: README update
+
+Update README.md with:
+
+* CoursePulse AI project overview
+* Student view explanation
+* Faculty view explanation
+* Faculty access code: faculty-demo
+* Syllabus upload feature
+* Manual course context editing
+* Responsible AI guardrails
+* MVP limitations
+* Future improvements
+
+Final output:
+Summarize what changed and confirm:
+
+* NYU Violet #57068C is used as the primary accent color
+* CoursePulse AI has its own logo
+* Student, faculty, and governance entry buttons are clearly clickable and visually distinct
+* Faculty can upload a .docx syllabus
+* Extracted syllabus context appears in a review/edit table before import
+* Existing dashboard, report, impact tracker, student flow, and governance features still work

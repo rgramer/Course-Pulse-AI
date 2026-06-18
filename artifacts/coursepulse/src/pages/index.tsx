@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, LineChart, ShieldCheck, CheckCircle2, User, Users } from "lucide-react";
+import { BookOpen, LineChart, ShieldCheck, User, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CoursePulseLogo } from "@/components/logo";
 
@@ -16,10 +16,10 @@ export default function IndexPage() {
             Turning weekly student reflections into responsible faculty learning intelligence
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <Badge variant="secondary" className="px-3 py-1 text-sm font-medium bg-primary/5 text-primary border-primary/20">Aggregated Only</Badge>
-            <Badge variant="secondary" className="px-3 py-1 text-sm font-medium bg-primary/5 text-primary border-primary/20">No Grading</Badge>
-            <Badge variant="secondary" className="px-3 py-1 text-sm font-medium bg-primary/5 text-primary border-primary/20">Faculty Decision-Support</Badge>
-            <Badge variant="secondary" className="px-3 py-1 text-sm font-medium bg-primary/5 text-primary border-primary/20">Privacy-Preserving MVP</Badge>
+            <Badge variant="secondary" className="px-3 py-1 text-sm font-medium bg-primary/8 text-primary border-primary/20">Aggregated Only</Badge>
+            <Badge variant="secondary" className="px-3 py-1 text-sm font-medium bg-primary/8 text-primary border-primary/20">No Grading</Badge>
+            <Badge variant="secondary" className="px-3 py-1 text-sm font-medium bg-primary/8 text-primary border-primary/20">Faculty Decision-Support</Badge>
+            <Badge variant="secondary" className="px-3 py-1 text-sm font-medium bg-primary/8 text-primary border-primary/20">Privacy-Preserving MVP</Badge>
           </div>
         </div>
 
@@ -61,37 +61,48 @@ export default function IndexPage() {
           </Card>
         </div>
 
-        <div className="max-w-3xl mx-auto space-y-8 pt-8">
-          <div className="grid md:grid-cols-2 gap-6">
+        <div className="max-w-3xl mx-auto space-y-6 pt-4">
+          <div className="grid md:grid-cols-3 gap-5">
+            {/* Student card — light teal */}
             <Link href="/student">
-              <div className="group rounded-2xl border-2 border-teal-200 bg-teal-50 p-8 cursor-pointer transition-all duration-200 hover:border-teal-400 hover:bg-teal-100 hover:shadow-lg hover:-translate-y-0.5 flex flex-col items-center text-center space-y-4 h-full">
+              <div className="group rounded-2xl border-2 border-teal-200 bg-teal-50 p-7 cursor-pointer transition-all duration-200 hover:border-teal-400 hover:bg-teal-100 hover:shadow-lg hover:-translate-y-0.5 flex flex-col items-center text-center space-y-3 h-full">
                 <div className="p-4 rounded-full bg-teal-500 group-hover:bg-teal-600 transition-colors">
-                  <BookOpen className="w-8 h-8 text-white" />
+                  <BookOpen className="w-7 h-7 text-white" />
                 </div>
-                <h2 className="text-2xl font-serif font-bold text-teal-900">Student Reflection Portal</h2>
-                <p className="text-teal-700">Submit your weekly reflection on course material and pacing.</p>
-                <div className="mt-2 px-6 py-2 rounded-full bg-teal-500 text-white text-sm font-semibold group-hover:bg-teal-600 transition-colors">
-                  Enter Reflection Portal &rarr;
+                <h2 className="text-xl font-serif font-bold text-teal-900">Student Reflection Portal</h2>
+                <p className="text-sm text-teal-700 leading-relaxed">Submit your weekly reflection on course material and pacing.</p>
+                <div className="mt-auto pt-2 px-5 py-2 rounded-full bg-teal-500 text-white text-sm font-semibold group-hover:bg-teal-600 transition-colors w-full text-center">
+                  Enter Student Portal &rarr;
                 </div>
               </div>
             </Link>
 
+            {/* Faculty card — NYU Violet */}
             <Link href="/faculty-login">
-              <div className="group rounded-2xl border-2 border-indigo-200 bg-indigo-50 p-8 cursor-pointer transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-100 hover:shadow-lg hover:-translate-y-0.5 flex flex-col items-center text-center space-y-4 h-full">
-                <div className="p-4 rounded-full bg-indigo-600 group-hover:bg-indigo-700 transition-colors">
-                  <LineChart className="w-8 h-8 text-white" />
+              <div className="group rounded-2xl border-2 border-primary/30 bg-primary/5 p-7 cursor-pointer transition-all duration-200 hover:border-primary/60 hover:bg-primary/10 hover:shadow-lg hover:-translate-y-0.5 flex flex-col items-center text-center space-y-3 h-full">
+                <div className="p-4 rounded-full bg-primary group-hover:bg-[#330662] transition-colors">
+                  <LineChart className="w-7 h-7 text-white" />
                 </div>
-                <h2 className="text-2xl font-serif font-bold text-indigo-900">Faculty Dashboard</h2>
-                <p className="text-indigo-700">Review aggregated class-wide learning patterns and signals.</p>
-                <div className="mt-2 px-6 py-2 rounded-full bg-indigo-600 text-white text-sm font-semibold group-hover:bg-indigo-700 transition-colors">
+                <h2 className="text-xl font-serif font-bold text-primary">Faculty Dashboard</h2>
+                <p className="text-sm text-primary/70 leading-relaxed">Review aggregated class-wide learning patterns and signals.</p>
+                <div className="mt-auto pt-2 px-5 py-2 rounded-full bg-primary text-white text-sm font-semibold group-hover:bg-[#330662] transition-colors w-full text-center">
                   Enter Faculty Dashboard &rarr;
                 </div>
               </div>
             </Link>
-          </div>
-          <div className="text-center">
-            <Link href="/governance" className="text-sm font-medium text-muted-foreground hover:text-foreground underline transition-colors">
-              View Governance Note
+
+            {/* Governance card — neutral slate */}
+            <Link href="/governance">
+              <div className="group rounded-2xl border-2 border-slate-200 bg-slate-50 p-7 cursor-pointer transition-all duration-200 hover:border-slate-400 hover:bg-slate-100 hover:shadow-lg hover:-translate-y-0.5 flex flex-col items-center text-center space-y-3 h-full">
+                <div className="p-4 rounded-full bg-slate-500 group-hover:bg-slate-600 transition-colors">
+                  <ShieldCheck className="w-7 h-7 text-white" />
+                </div>
+                <h2 className="text-xl font-serif font-bold text-slate-800">Governance Note</h2>
+                <p className="text-sm text-slate-600 leading-relaxed">Read our responsible use statement and ethics commitments.</p>
+                <div className="mt-auto pt-2 px-5 py-2 rounded-full bg-slate-500 text-white text-sm font-semibold group-hover:bg-slate-600 transition-colors w-full text-center">
+                  View Governance Note &rarr;
+                </div>
+              </div>
             </Link>
           </div>
         </div>
