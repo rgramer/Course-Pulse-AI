@@ -1,6 +1,6 @@
-# [Project name]
+# CoursePulse AI
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A responsible AI-powered faculty learning intelligence tool. Students submit weekly reflections; faculty see only aggregated class-wide learning patterns — no individual student data, no grading, no surveillance.
 
 ## Run & Operate
 
@@ -19,18 +19,29 @@ _Replace the heading above with the project's name, and this line with one sente
 - Validation: Zod (`zod/v4`), `drizzle-zod`
 - API codegen: Orval (from OpenAPI spec)
 - Build: esbuild (CJS bundle)
+- Frontend: React + Vite + Tailwind + shadcn/ui, Recharts
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — API contract source of truth
+- `lib/db/src/schema/` — DB schema (courseContext, reflections, classifiedSignals, facultyActions)
+- `artifacts/api-server/src/routes/` — Express route handlers
+- `artifacts/api-server/src/lib/classifier.ts` — Rule-based reflection classifier
+- `artifacts/coursepulse/src/` — React frontend
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Rule-based classifier maps reflection text → learning signal (Comprehension, Definitional Confusion, Application Gap, Transfer Gap, Pacing Concern, Support Need, Engagement Signal) with severity 0–3
+- Faculty access uses a simple shared access code ("faculty-demo") — no full auth system per MVP spec
+- All faculty views show only aggregated data; no individual student records are ever surfaced
+- Dashboard stats computed server-side in a single GET /faculty/dashboard endpoint for simplicity
+- Reflections are classified at submission time and stored in classified_signals table
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- **Student flow:** Submit weekly reflection → auto-classified by rule-based engine → thank-you confirmation
+- **Faculty flow:** Enter access code → view aggregated dashboard (charts, stat cards, recommendations) → manage course context → record instructional actions in impact tracker
+- **Governance page:** Full responsible use statement; ethics note on every faculty page
 
 ## User preferences
 
@@ -38,7 +49,9 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Always run codegen after changing openapi.yaml
+- Faculty access code is "faculty-demo" (hardcoded in routes/faculty.ts)
+- The classifier is in `artifacts/api-server/src/lib/classifier.ts` — severity is adjusted by confidence score
 
 ## Pointers
 

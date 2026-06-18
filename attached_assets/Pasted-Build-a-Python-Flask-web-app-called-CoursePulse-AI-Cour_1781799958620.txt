@@ -1,0 +1,265 @@
+Build a Python Flask web app called CoursePulse AI.
+
+CoursePulse AI is a responsible AI-powered faculty learning intelligence MVP. It is not a chatbot, grading system, student ranking system, prediction tool, or surveillance system. Students submit weekly reflections, and faculty see only aggregated class-wide learning patterns connected to course topics and learning objectives.
+
+Use:
+
+* Python Flask
+* SQLite
+* HTML/CSS/JavaScript
+* Chart.js
+* Rule-based classifier for the demo version
+* No external API key required for the first MVP
+
+Core product structure:
+
+1. Entry Page
+   Route: /
+   Purpose: Let users choose their role.
+
+Include:
+
+* Title: CoursePulse AI
+* Subtitle: Turning weekly student reflections into responsible faculty learning intelligence
+* Short note: This system does not grade, rank, predict failure, or surveil students.
+* Buttons:
+
+  * I am a student
+  * I am faculty
+  * View governance note
+
+2. Student View
+   Routes:
+
+* /student
+* /student/submit
+* /student/thank-you
+
+The student view should include:
+
+* A clear transparency note explaining that reflections are used for instructional improvement, not grading
+* A reflection submission form
+* A confirmation/thank-you page after submission
+
+Student reflection form fields:
+
+* Course week dropdown: Week 1 through Week 10
+* Topic dropdown connected to course context
+* Learning objective dropdown connected to selected topic
+* Confidence level from 1 to 5
+* Reflection text
+* Support requested: yes/no
+* Consent checkbox: “I understand this is used for instructional improvement, not grading.”
+
+After submission:
+
+* Save the reflection in the database
+* Run the rule-based classifier
+* Save the classification result
+* Redirect to thank-you page
+
+The thank-you page should say:
+“Thank you. Your reflection has been included in class-wide course improvement analytics. This submission will not be used for grading, ranking, failure prediction, or surveillance.”
+
+3. Faculty Access View
+   Routes:
+
+* /faculty-login
+* /faculty/dashboard
+* /faculty/course-context
+* /faculty/impact-tracker
+
+For the MVP, do not build a full authentication system. Instead, create a simple faculty access code screen.
+
+Faculty access code:
+faculty-demo
+
+If the correct code is entered, allow access to the faculty pages.
+
+Faculty should be able to:
+
+* View aggregated dashboard analytics
+* View course context
+* Add or edit course topics and learning objectives
+* View recommended instructional adjustments
+* Record teaching adjustments in the Instructional Impact Tracker
+
+Faculty should never see:
+
+* Student names
+* Student rankings
+* Individual risk scores
+* Failure predictions
+* Mental health diagnoses
+* Individual student surveillance views
+
+4. Faculty Dashboard
+   Route: /faculty/dashboard
+
+Dashboard cards:
+
+* Total reflections submitted
+* Average confidence score
+* Most common learning signal
+* Highest concern topic
+* Percent requesting support
+
+Charts:
+
+* Signal Distribution Bar Chart
+* Confidence Trend Line Chart
+* Topic Confusion Heatmap or table
+* Support Request Pie Chart
+
+Dashboard sections:
+
+* Top confusion themes
+* Recommended instructional adjustments
+* Governance reminder banner
+
+The dashboard must show aggregated patterns only.
+
+5. Course Context Setup
+   Route: /faculty/course-context
+
+Faculty can view or edit:
+
+* Week
+* Topic
+* Learning objective
+* Assignment
+* Reading
+
+Seed the app with an Emerging Technologies course context using topics such as:
+
+* Diffusion of Innovation
+* User-Led Innovation
+* Displacement of Concepts
+* Generative AI
+* Entrepreneurship
+* AI Governance
+* Future of Work
+
+6. Learning Signal Classifier
+   Create a rule-based classifier that maps reflection text into one primary signal, one optional secondary signal, a severity score, a theme summary, and a recommended action.
+
+Learning signal categories:
+
+* Comprehension
+* Definitional Confusion
+* Application Gap
+* Transfer Gap
+* Pacing Concern
+* Support Need
+* Engagement Signal
+
+Severity scale:
+0 = No concern
+1 = Low concern
+2 = Moderate concern
+3 = High concern
+
+Example classification output:
+{
+"primary_signal": "Transfer Gap",
+"secondary_signal": "Application Gap",
+"severity_score": 2,
+"theme_summary": "Student understands the basic concept but struggles to connect it to another framework or real-world case.",
+"recommended_action": "Provide a worked example connecting the topic to a current technology case."
+}
+
+7. Instructional Impact Tracker
+   Route: /faculty/impact-tracker
+
+Faculty can record:
+
+* Week
+* Topic
+* Action taken
+* Date
+
+Example actions:
+
+* Added review activity
+* Re-taught concept
+* Added case study
+* Slowed pacing
+* Offered office hours
+* Revised assignment instructions
+
+The dashboard should compare signal patterns before and after faculty actions where possible.
+
+Example:
+“Transfer Gap for Generative AI decreased from 42% to 18% after a case study was added.”
+
+8. Governance Page
+   Route: /governance
+
+Include this statement:
+
+CoursePulse AI Responsible Use Statement
+
+CoursePulse AI is designed as a faculty decision-support tool, not a grading, ranking, surveillance, or disciplinary system. Student reflections are used to identify class-wide learning patterns connected to course topics and learning objectives. The system does not evaluate individual students, predict failure, diagnose mental health concerns, or replace faculty judgment. Faculty should use the dashboard only to improve instruction, adjust pacing, clarify confusing topics, and provide additional learning support.
+
+9. Database Tables
+
+course_context:
+
+* id
+* week
+* topic
+* learning_objective
+* assignment
+* reading
+
+reflections:
+
+* id
+* week
+* topic
+* learning_objective
+* confidence_score
+* reflection_text
+* support_requested
+* created_at
+
+classified_signals:
+
+* id
+* reflection_id
+* primary_signal
+* secondary_signal
+* severity_score
+* theme_summary
+* recommended_action
+
+faculty_actions:
+
+* id
+* week
+* topic
+* action_taken
+* created_at
+
+10. Seed Data
+    Create at least:
+
+* 10 course context records
+* 30 mock student reflections
+* Classified signal records for the mock reflections
+* A few sample faculty actions
+
+The dashboard should not be empty when the app launches.
+
+11. MVP Acceptance Criteria
+    The MVP is complete when:
+
+* A student can submit a reflection
+* The reflection is saved
+* The reflection is classified
+* The faculty dashboard updates with aggregated analytics
+* Faculty can access the dashboard through a faculty access code
+* Faculty can view course context
+* Faculty can record instructional actions
+* The governance page clearly states the ethical boundaries
+* No page displays individual student risk, ranking, grading, or prediction

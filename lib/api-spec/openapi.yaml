@@ -3,13 +3,19 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: CoursePulse AI API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: reflections
+    description: Student reflection operations
+  - name: course-context
+    description: Course context operations
+  - name: faculty
+    description: Faculty operations
 paths:
   /healthz:
     get:
@@ -24,13 +30,448 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /topics:
+    get:
+      operationId: listTopics
+      tags: [course-context]
+      summary: List distinct topics for student form dropdowns
+      responses:
+        "200":
+          description: List of topic strings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /course-contexts:
+    get:
+      operationId: listCourseContexts
+      tags: [course-context]
+      summary: List all course context records
+      responses:
+        "200":
+          description: Array of course context records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CourseContext"
+    post:
+      operationId: createCourseContext
+      tags: [course-context]
+      summary: Create a new course context record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourseContextInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseContext"
+
+  /course-contexts/{id}:
+    patch:
+      operationId: updateCourseContext
+      tags: [course-context]
+      summary: Update a course context record
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourseContextUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseContext"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteCourseContext
+      tags: [course-context]
+      summary: Delete a course context record
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+
+  /reflections:
+    post:
+      operationId: submitReflection
+      tags: [reflections]
+      summary: Submit a student reflection (auto-classifies)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReflectionInput"
+      responses:
+        "201":
+          description: Submitted and classified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReflectionWithSignal"
+
+  /faculty/verify:
+    post:
+      operationId: verifyFacultyAccess
+      tags: [faculty]
+      summary: Verify faculty access code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FacultyVerifyInput"
+      responses:
+        "200":
+          description: Access granted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FacultyVerifyResponse"
+        "401":
+          description: Invalid access code
+
+  /faculty/dashboard:
+    get:
+      operationId: getFacultyDashboard
+      tags: [faculty]
+      summary: Get aggregated dashboard statistics
+      responses:
+        "200":
+          description: Aggregated dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /faculty/actions:
+    get:
+      operationId: listFacultyActions
+      tags: [faculty]
+      summary: List all faculty instructional actions
+      responses:
+        "200":
+          description: Array of faculty actions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FacultyAction"
+    post:
+      operationId: createFacultyAction
+      tags: [faculty]
+      summary: Record a new faculty instructional action
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FacultyActionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FacultyAction"
+
+  /faculty/signals:
+    get:
+      operationId: listSignals
+      tags: [faculty]
+      summary: List all classified signals with aggregation by topic and week
+      responses:
+        "200":
+          description: Array of classified signals with reflection data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SignalWithContext"
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
 
+    CourseContext:
+      type: object
+      required: [id, week, topic, learningObjective, assignment, reading]
+      properties:
+        id:
+          type: integer
+        week:
+          type: integer
+        topic:
+          type: string
+        learningObjective:
+          type: string
+        assignment:
+          type: ["string", "null"]
+        reading:
+          type: ["string", "null"]
+
+    CourseContextInput:
+      type: object
+      required: [week, topic, learningObjective]
+      properties:
+        week:
+          type: integer
+        topic:
+          type: string
+        learningObjective:
+          type: string
+        assignment:
+          type: string
+        reading:
+          type: string
+
+    CourseContextUpdate:
+      type: object
+      properties:
+        week:
+          type: integer
+        topic:
+          type: string
+        learningObjective:
+          type: string
+        assignment:
+          type: string
+        reading:
+          type: string
+
+    Reflection:
+      type: object
+      required: [id, week, topic, learningObjective, confidenceScore, reflectionText, supportRequested, createdAt]
+      properties:
+        id:
+          type: integer
+        week:
+          type: integer
+        topic:
+          type: string
+        learningObjective:
+          type: string
+        confidenceScore:
+          type: integer
+        reflectionText:
+          type: string
+        supportRequested:
+          type: boolean
+        createdAt:
+          type: string
+
+    ReflectionInput:
+      type: object
+      required: [week, topic, learningObjective, confidenceScore, reflectionText, supportRequested, consentGiven]
+      properties:
+        week:
+          type: integer
+        topic:
+          type: string
+        learningObjective:
+          type: string
+        confidenceScore:
+          type: integer
+        reflectionText:
+          type: string
+        supportRequested:
+          type: boolean
+        consentGiven:
+          type: boolean
+
+    ClassifiedSignal:
+      type: object
+      required: [id, reflectionId, primarySignal, secondarySignal, severityScore, themeSummary, recommendedAction]
+      properties:
+        id:
+          type: integer
+        reflectionId:
+          type: integer
+        primarySignal:
+          type: string
+        secondarySignal:
+          type: ["string", "null"]
+        severityScore:
+          type: integer
+        themeSummary:
+          type: string
+        recommendedAction:
+          type: string
+
+    ReflectionWithSignal:
+      type: object
+      required: [reflection, signal]
+      properties:
+        reflection:
+          $ref: "#/components/schemas/Reflection"
+        signal:
+          $ref: "#/components/schemas/ClassifiedSignal"
+
+    SignalWithContext:
+      type: object
+      required: [id, reflectionId, primarySignal, secondarySignal, severityScore, themeSummary, recommendedAction, week, topic, learningObjective]
+      properties:
+        id:
+          type: integer
+        reflectionId:
+          type: integer
+        primarySignal:
+          type: string
+        secondarySignal:
+          type: ["string", "null"]
+        severityScore:
+          type: integer
+        themeSummary:
+          type: string
+        recommendedAction:
+          type: string
+        week:
+          type: integer
+        topic:
+          type: string
+        learningObjective:
+          type: string
+
+    FacultyAction:
+      type: object
+      required: [id, week, topic, actionTaken, createdAt]
+      properties:
+        id:
+          type: integer
+        week:
+          type: integer
+        topic:
+          type: string
+        actionTaken:
+          type: string
+        createdAt:
+          type: string
+
+    FacultyActionInput:
+      type: object
+      required: [week, topic, actionTaken]
+      properties:
+        week:
+          type: integer
+        topic:
+          type: string
+        actionTaken:
+          type: string
+
+    FacultyVerifyInput:
+      type: object
+      required: [accessCode]
+      properties:
+        accessCode:
+          type: string
+
+    FacultyVerifyResponse:
+      type: object
+      required: [success]
+      properties:
+        success:
+          type: boolean
+
+    SignalCount:
+      type: object
+      required: [signal, count]
+      properties:
+        signal:
+          type: string
+        count:
+          type: integer
+
+    TopicConfusionItem:
+      type: object
+      required: [topic, avgSeverity, count, mostCommonSignal]
+      properties:
+        topic:
+          type: string
+        avgSeverity:
+          type: number
+        count:
+          type: integer
+        mostCommonSignal:
+          type: string
+
+    ConfidenceTrendItem:
+      type: object
+      required: [week, avgConfidence, reflectionCount]
+      properties:
+        week:
+          type: integer
+        avgConfidence:
+          type: number
+        reflectionCount:
+          type: integer
+
+    DashboardStats:
+      type: object
+      required: [totalReflections, avgConfidenceScore, mostCommonSignal, highestConcernTopic, percentRequestingSupport, signalDistribution, topicConfusion, confidenceTrend, topConfusionThemes, recommendedAdjustments]
+      properties:
+        totalReflections:
+          type: integer
+        avgConfidenceScore:
+          type: number
+        mostCommonSignal:
+          type: string
+        highestConcernTopic:
+          type: ["string", "null"]
+        percentRequestingSupport:
+          type: number
+        signalDistribution:
+          type: array
+          items:
+            $ref: "#/components/schemas/SignalCount"
+        topicConfusion:
+          type: array
+          items:
+            $ref: "#/components/schemas/TopicConfusionItem"
+        confidenceTrend:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConfidenceTrendItem"
+        topConfusionThemes:
+          type: array
+          items:
+            type: string
+        recommendedAdjustments:
+          type: array
+          items:
+            type: string
