@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
+  version: 0.2.0
   description: CoursePulse AI API specification
 servers:
   - url: /api
@@ -164,7 +164,26 @@ paths:
     get:
       operationId: getFacultyDashboard
       tags: [faculty]
-      summary: Get aggregated dashboard statistics
+      summary: Get aggregated dashboard statistics with optional filters
+      parameters:
+        - in: query
+          name: week
+          required: false
+          schema:
+            type: integer
+          description: Filter by specific week number
+        - in: query
+          name: topic
+          required: false
+          schema:
+            type: string
+          description: Filter by topic name
+        - in: query
+          name: signal
+          required: false
+          schema:
+            type: string
+          description: Filter by primary signal category
       responses:
         "200":
           description: Aggregated dashboard data
@@ -209,7 +228,7 @@ paths:
     get:
       operationId: listSignals
       tags: [faculty]
-      summary: List all classified signals with aggregation by topic and week
+      summary: List all classified signals with reflection context
       responses:
         "200":
           description: Array of classified signals with reflection data
@@ -219,6 +238,19 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/SignalWithContext"
+
+  /faculty/report:
+    get:
+      operationId: getFacultyReport
+      tags: [faculty]
+      summary: Get a full Course Learning Intelligence Report
+      responses:
+        "200":
+          description: Course-wide learning intelligence report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseReport"
 
 components:
   schemas:
@@ -370,7 +402,7 @@ components:
 
     FacultyAction:
       type: object
-      required: [id, week, topic, actionTaken, createdAt]
+      required: [id, week, topic, actionTaken, reason, createdAt]
       properties:
         id:
           type: integer
@@ -380,6 +412,8 @@ components:
           type: string
         actionTaken:
           type: string
+        reason:
+          type: ["string", "null"]
         createdAt:
           type: string
 
@@ -392,6 +426,8 @@ components:
         topic:
           type: string
         actionTaken:
+          type: string
+        reason:
           type: string
 
     FacultyVerifyInput:
@@ -441,9 +477,39 @@ components:
         reflectionCount:
           type: integer
 
+    RecommendedAdjustment:
+      type: object
+      required: [pattern, action, rationale, topic, learningObjective]
+      properties:
+        pattern:
+          type: string
+        action:
+          type: string
+        rationale:
+          type: string
+        topic:
+          type: string
+        learningObjective:
+          type: string
+
+    WeeklyPulse:
+      type: object
+      required: [avgConfidence, mostCommonSignal, highestConcernTopic, facultyPriority, insufficientData]
+      properties:
+        avgConfidence:
+          type: number
+        mostCommonSignal:
+          type: string
+        highestConcernTopic:
+          type: ["string", "null"]
+        facultyPriority:
+          type: string
+        insufficientData:
+          type: boolean
+
     DashboardStats:
       type: object
-      required: [totalReflections, avgConfidenceScore, mostCommonSignal, highestConcernTopic, percentRequestingSupport, signalDistribution, topicConfusion, confidenceTrend, topConfusionThemes, recommendedAdjustments]
+      required: [totalReflections, avgConfidenceScore, mostCommonSignal, highestConcernTopic, percentRequestingSupport, avgSeverity, totalInstructionalActions, signalDistribution, topicConfusion, confidenceTrend, topConfusionThemes, recommendedAdjustments, weeklyPulse, insufficientData]
       properties:
         totalReflections:
           type: integer
@@ -455,6 +521,10 @@ components:
           type: ["string", "null"]
         percentRequestingSupport:
           type: number
+        avgSeverity:
+          type: number
+        totalInstructionalActions:
+          type: integer
         signalDistribution:
           type: array
           items:
@@ -474,4 +544,77 @@ components:
         recommendedAdjustments:
           type: array
           items:
-            type: string
+            $ref: "#/components/schemas/RecommendedAdjustment"
+        weeklyPulse:
+          $ref: "#/components/schemas/WeeklyPulse"
+        insufficientData:
+          type: boolean
+
+    ImpactComparison:
+      type: object
+      required: [topic, week, actionTaken, beforePct, afterPct, signal, improvement]
+      properties:
+        topic:
+          type: string
+        week:
+          type: integer
+        actionTaken:
+          type: string
+        signal:
+          type: string
+        beforePct:
+          type: number
+        afterPct:
+          type: number
+        improvement:
+          type: number
+
+    ReportTopicSummary:
+      type: object
+      required: [topic, avgSeverity, count, dominantSignal, engagementLevel]
+      properties:
+        topic:
+          type: string
+        avgSeverity:
+          type: number
+        count:
+          type: integer
+        dominantSignal:
+          type: string
+        engagementLevel:
+          type: string
+
+    CourseReport:
+      type: object
+      required: [generatedAt, totalReflections, avgConfidence, supportRate, mostConfusingTopics, highestEngagementTopics, confidenceTrendSummary, supportNeedsSummary, instructionalActionsRecorded, impactComparisons, responsibleAiNote]
+      properties:
+        generatedAt:
+          type: string
+        totalReflections:
+          type: integer
+        avgConfidence:
+          type: number
+        supportRate:
+          type: number
+        mostConfusingTopics:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReportTopicSummary"
+        highestEngagementTopics:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReportTopicSummary"
+        confidenceTrendSummary:
+          type: string
+        supportNeedsSummary:
+          type: string
+        instructionalActionsRecorded:
+          type: array
+          items:
+            $ref: "#/components/schemas/FacultyAction"
+        impactComparisons:
+          type: array
+          items:
+            $ref: "#/components/schemas/ImpactComparison"
+        responsibleAiNote:
+          type: string

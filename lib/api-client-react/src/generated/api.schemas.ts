@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * CoursePulse AI API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 export interface HealthStatus {
   status: string;
@@ -92,6 +92,8 @@ export interface FacultyAction {
   week: number;
   topic: string;
   actionTaken: string;
+  /** @nullable */
+  reason: string | null;
   createdAt: string;
 }
 
@@ -99,6 +101,7 @@ export interface FacultyActionInput {
   week: number;
   topic: string;
   actionTaken: string;
+  reason?: string;
 }
 
 export interface FacultyVerifyInput {
@@ -127,6 +130,23 @@ export interface ConfidenceTrendItem {
   reflectionCount: number;
 }
 
+export interface RecommendedAdjustment {
+  pattern: string;
+  action: string;
+  rationale: string;
+  topic: string;
+  learningObjective: string;
+}
+
+export interface WeeklyPulse {
+  avgConfidence: number;
+  mostCommonSignal: string;
+  /** @nullable */
+  highestConcernTopic: string | null;
+  facultyPriority: string;
+  insufficientData: boolean;
+}
+
 export interface DashboardStats {
   totalReflections: number;
   avgConfidenceScore: number;
@@ -134,10 +154,61 @@ export interface DashboardStats {
   /** @nullable */
   highestConcernTopic: string | null;
   percentRequestingSupport: number;
+  avgSeverity: number;
+  totalInstructionalActions: number;
   signalDistribution: SignalCount[];
   topicConfusion: TopicConfusionItem[];
   confidenceTrend: ConfidenceTrendItem[];
   topConfusionThemes: string[];
-  recommendedAdjustments: string[];
+  recommendedAdjustments: RecommendedAdjustment[];
+  weeklyPulse: WeeklyPulse;
+  insufficientData: boolean;
 }
+
+export interface ImpactComparison {
+  topic: string;
+  week: number;
+  actionTaken: string;
+  signal: string;
+  beforePct: number;
+  afterPct: number;
+  improvement: number;
+}
+
+export interface ReportTopicSummary {
+  topic: string;
+  avgSeverity: number;
+  count: number;
+  dominantSignal: string;
+  engagementLevel: string;
+}
+
+export interface CourseReport {
+  generatedAt: string;
+  totalReflections: number;
+  avgConfidence: number;
+  supportRate: number;
+  mostConfusingTopics: ReportTopicSummary[];
+  highestEngagementTopics: ReportTopicSummary[];
+  confidenceTrendSummary: string;
+  supportNeedsSummary: string;
+  instructionalActionsRecorded: FacultyAction[];
+  impactComparisons: ImpactComparison[];
+  responsibleAiNote: string;
+}
+
+export type GetFacultyDashboardParams = {
+/**
+ * Filter by specific week number
+ */
+week?: number;
+/**
+ * Filter by topic name
+ */
+topic?: string;
+/**
+ * Filter by primary signal category
+ */
+signal?: string;
+};
 

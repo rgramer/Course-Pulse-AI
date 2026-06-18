@@ -6,10 +6,10 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export interface CourseContextInput {
-  week: number;
+export interface RecommendedAdjustment {
+  pattern: string;
+  action: string;
+  rationale: string;
   topic: string;
   learningObjective: string;
-  assignment?: string;
-  reading?: string;
 }

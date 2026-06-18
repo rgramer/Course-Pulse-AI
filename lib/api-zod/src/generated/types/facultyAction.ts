@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * CoursePulse AI API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 
 export interface FacultyAction {
@@ -11,5 +11,7 @@ export interface FacultyAction {
   week: number;
   topic: string;
   actionTaken: string;
+  /** @nullable */
+  reason: string | null;
   createdAt: string;
 }

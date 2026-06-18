@@ -7,6 +7,7 @@ export const facultyActionsTable = pgTable("faculty_actions", {
   week: integer("week").notNull(),
   topic: text("topic").notNull(),
   actionTaken: text("action_taken").notNull(),
+  reason: text("reason"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 

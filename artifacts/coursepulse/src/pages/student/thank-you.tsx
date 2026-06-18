@@ -4,24 +4,27 @@ import { Button } from "@/components/ui/button";
 
 export default function StudentThankYouPage() {
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
-      <div className="max-w-md w-full bg-card border rounded-2xl p-8 text-center space-y-6 shadow-sm">
-        <div className="inline-flex items-center justify-center p-4 bg-green-50 text-green-600 rounded-full mb-2">
-          <CheckCircle2 className="w-12 h-12" />
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 py-20">
+      <div className="max-w-lg w-full bg-card border shadow-lg rounded-3xl p-10 text-center space-y-8">
+        <div className="inline-flex items-center justify-center p-5 bg-secondary/10 text-secondary rounded-full mb-2">
+          <CheckCircle2 className="w-16 h-16" />
         </div>
         
-        <h1 className="text-3xl font-bold text-primary">Thank You</h1>
+        <h1 className="text-4xl font-bold font-serif text-primary">Thank you for your reflection.</h1>
         
-        <div className="p-4 bg-muted/50 rounded-lg text-left">
-          <p className="text-muted-foreground text-sm leading-relaxed font-medium">
+        <div className="space-y-4">
+          <p className="text-foreground text-lg leading-relaxed">
             Your reflection has been included in class-wide course improvement analytics. This submission will not be used for grading, ranking, failure prediction, or surveillance.
+          </p>
+          <p className="text-muted-foreground text-sm font-medium">
+            Your anonymized responses contribute to better instruction for the entire class.
           </p>
         </div>
         
-        <div className="pt-4">
+        <div className="pt-6 border-t border-border/50">
           <Link href="/">
-            <Button variant="outline" className="w-full">
-              <Home className="w-4 h-4 mr-2" /> Return to Home
+            <Button size="lg" variant="default" className="w-full sm:w-auto px-8" data-testid="return-home-btn">
+              <Home className="w-5 h-5 mr-2" /> Return Home
             </Button>
           </Link>
         </div>

@@ -3,11 +3,13 @@
  * Do not edit manually.
  * Api
  * CoursePulse AI API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import type { ConfidenceTrendItem } from './confidenceTrendItem';
+import type { RecommendedAdjustment } from './recommendedAdjustment';
 import type { SignalCount } from './signalCount';
 import type { TopicConfusionItem } from './topicConfusionItem';
+import type { WeeklyPulse } from './weeklyPulse';
 
 export interface DashboardStats {
   totalReflections: number;
@@ -16,9 +18,13 @@ export interface DashboardStats {
   /** @nullable */
   highestConcernTopic: string | null;
   percentRequestingSupport: number;
+  avgSeverity: number;
+  totalInstructionalActions: number;
   signalDistribution: SignalCount[];
   topicConfusion: TopicConfusionItem[];
   confidenceTrend: ConfidenceTrendItem[];
   topConfusionThemes: string[];
-  recommendedAdjustments: string[];
+  recommendedAdjustments: RecommendedAdjustment[];
+  weeklyPulse: WeeklyPulse;
+  insufficientData: boolean;
 }

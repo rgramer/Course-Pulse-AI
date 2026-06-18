@@ -6,9 +6,11 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export interface TopicConfusionItem {
-  topic: string;
-  avgSeverity: number;
-  count: number;
+export interface WeeklyPulse {
+  avgConfidence: number;
   mostCommonSignal: string;
+  /** @nullable */
+  highestConcernTopic: string | null;
+  facultyPriority: string;
+  insufficientData: boolean;
 }

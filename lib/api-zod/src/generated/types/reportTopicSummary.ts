@@ -6,10 +6,10 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export interface CourseContextInput {
-  week: number;
+export interface ReportTopicSummary {
   topic: string;
-  learningObjective: string;
-  assignment?: string;
-  reading?: string;
+  avgSeverity: number;
+  count: number;
+  dominantSignal: string;
+  engagementLevel: string;
 }

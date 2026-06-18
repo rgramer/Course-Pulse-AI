@@ -1,44 +1,92 @@
 import { Link } from "wouter";
-import { ShieldCheck, ArrowLeft } from "lucide-react";
+import { ShieldCheck, ArrowLeft, Lock, EyeOff, Scale, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function GovernancePage() {
   return (
     <div className="min-h-screen bg-background p-6">
-      <div className="max-w-3xl mx-auto pt-12 pb-24 space-y-8">
-        <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground mb-8">
+      <div className="max-w-3xl mx-auto pt-12 pb-24 space-y-12">
+        <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Home
         </Link>
         
         <div className="space-y-4 border-b pb-8">
-          <div className="inline-flex items-center justify-center p-3 bg-primary/5 rounded-full">
-            <ShieldCheck className="w-8 h-8 text-primary" />
+          <div className="inline-flex items-center justify-center p-4 bg-primary/10 rounded-full mb-2">
+            <ShieldCheck className="w-10 h-10 text-primary" />
           </div>
-          <h1 className="text-4xl font-bold text-primary">Responsible Use Statement</h1>
-          <p className="text-xl text-muted-foreground">
+          <h1 className="text-4xl md:text-5xl font-bold font-serif text-primary tracking-tight">Responsible Use Statement</h1>
+          <p className="text-xl text-muted-foreground leading-relaxed">
             Our commitment to ethical, privacy-preserving educational technology.
           </p>
         </div>
 
-        <div className="prose prose-slate prose-lg max-w-none text-foreground/80">
-          <p className="lead font-medium text-foreground">
-            CoursePulse AI Responsible Use Statement:
-          </p>
-          <p>
-            CoursePulse AI is designed as a faculty decision-support tool, not a grading, ranking, surveillance, or disciplinary system. Student reflections are used to identify class-wide learning patterns connected to course topics and learning objectives. 
-          </p>
-          <p>
-            The system does not evaluate individual students, predict failure, diagnose mental health concerns, or replace faculty judgment. Faculty should use the dashboard only to improve instruction, adjust pacing, clarify confusing topics, and provide additional support resources. 
-          </p>
-          <p>
-            Data governance, retention policy, and student access rights are determined by institutional policy. This system supports the instructor's professional judgment, not surveillance.
-          </p>
+        <div className="space-y-10">
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-2">
+              <Scale className="w-6 h-6 text-primary" /> Purpose of this tool
+            </h2>
+            <p className="text-muted-foreground leading-relaxed">
+              CoursePulse AI is designed to help faculty understand class-wide learning patterns, pacing challenges, and comprehension gaps based on weekly student reflections. It serves as a formative feedback loop to improve instructional quality.
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-2">
+              <UserCheck className="w-6 h-6 text-primary" /> What the system does
+            </h2>
+            <p className="text-muted-foreground leading-relaxed">
+              The system aggregates reflections, classifies text into learning signals (e.g., Comprehension, Confusion, Pacing), and surfaces overarching themes. It highlights areas where the class as a whole might need additional support or alternative explanations.
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-2">
+              <EyeOff className="w-6 h-6 text-destructive" /> What the system does not do
+            </h2>
+            <ul className="list-disc list-outside pl-6 space-y-2 text-muted-foreground leading-relaxed">
+              <li>No grading of student reflections or assigning points based on content.</li>
+              <li>No ranking of students based on their understanding or confidence.</li>
+              <li>No failure prediction or "at-risk" student profiling.</li>
+              <li>No individual surveillance — individual submissions are never linked to a student identity in the dashboard.</li>
+              <li>No mental health diagnosis or behavioral profiling.</li>
+            </ul>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-2">
+              <Lock className="w-6 h-6 text-primary" /> Data minimization approach
+            </h2>
+            <p className="text-muted-foreground leading-relaxed">
+              We employ strict data minimization. The system only displays class-wide patterns. Minimum thresholds are enforced for data display (e.g., a minimum number of reflections must be submitted before detailed charts are shown) to prevent reverse-identification. No student names are stored or shown in the faculty dashboard.
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold">Human oversight</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              Faculty judgment is always required. CoursePulse AI is a decision-support tool; it does not replace instructional decisions. The AI surfaces patterns, but the instructor determines the appropriate pedagogical response.
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold">Classroom use boundaries</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              Insights generated by this tool are strictly for improving instruction and supporting the learning experience. They must never be used for disciplinary action or formal academic evaluation.
+            </p>
+          </section>
+
+          <section className="space-y-6 bg-muted/30 p-8 rounded-2xl border">
+            <h2 className="text-xl font-bold font-serif">Responsible Use Statement</h2>
+            <blockquote className="text-lg leading-relaxed text-foreground italic border-l-4 border-primary pl-6 py-2">
+              "CoursePulse AI is designed as a faculty decision-support tool, not a grading, ranking, surveillance, or disciplinary system. Student reflections are used to identify class-wide learning patterns connected to course topics and learning objectives. The system does not evaluate individual students, predict failure, diagnose mental health concerns, or replace faculty judgment. Faculty should use the dashboard only to improve instruction, adjust pacing, clarify confusing topics, and provide additional support resources. Data governance, retention policy, and student access rights are determined by institutional policy. This system supports the instructor's professional judgment, not surveillance."
+            </blockquote>
+          </section>
         </div>
         
-        <div className="pt-8 border-t">
+        <div className="pt-10">
           <Link href="/">
-            <Button variant="outline">Return Home</Button>
+            <Button size="lg" variant="outline" className="px-8">Return Home</Button>
           </Link>
         </div>
       </div>

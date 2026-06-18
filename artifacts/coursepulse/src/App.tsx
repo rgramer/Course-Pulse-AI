@@ -13,6 +13,7 @@ import FacultyLoginPage from "@/pages/faculty-login";
 import FacultyDashboardPage from "@/pages/faculty/dashboard";
 import FacultyCourseContextPage from "@/pages/faculty/course-context";
 import FacultyImpactTrackerPage from "@/pages/faculty/impact-tracker";
+import FacultyReportPage from "@/pages/faculty/report";
 
 const queryClient = new QueryClient();
 
@@ -21,16 +22,17 @@ function Router() {
     <Switch>
       <Route path="/" component={IndexPage} />
       <Route path="/governance" component={GovernancePage} />
-      
+
       <Route path="/student" component={StudentIndexPage} />
       <Route path="/student/submit" component={StudentSubmitPage} />
       <Route path="/student/thank-you" component={StudentThankYouPage} />
-      
+
       <Route path="/faculty-login" component={FacultyLoginPage} />
       <Route path="/faculty/dashboard" component={FacultyDashboardPage} />
       <Route path="/faculty/course-context" component={FacultyCourseContextPage} />
       <Route path="/faculty/impact-tracker" component={FacultyImpactTrackerPage} />
-      
+      <Route path="/faculty/report" component={FacultyReportPage} />
+
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,0 +1,209 @@
+Upgrade the existing CoursePulse AI Flask app. Do not rebuild from scratch and do not delete the existing working features. Improve the app so it feels like a polished final project MVP, not just a basic prototype.
+
+Main goal:
+Make CoursePulse AI look and feel like a responsible, professional faculty learning intelligence tool with separate student and faculty experiences, strong governance language, and a more compelling faculty dashboard.
+
+Keep existing features:
+
+* Student role entry
+* Student reflection form
+* Thank-you page
+* Faculty access code: faculty-demo
+* Faculty dashboard
+* Course Context editor
+* Impact Tracker
+* Rule-based classifier
+* SQLite database
+* Seeded Emerging Technologies course data
+* Aggregated-only faculty views
+
+Do not add:
+
+* Student rankings
+* Individual student risk scores
+* Failure prediction
+* Grading features
+* Mental health diagnosis
+* Student surveillance views
+* Public display of individual reflections
+
+Design polish:
+Create a more modern, professional visual design:
+
+* Clean dashboard layout
+* Better spacing and typography
+* Consistent navigation bar
+* Professional color palette
+* Rounded cards
+* Clear section headings
+* Better buttons
+* Responsive layout for laptop screens
+* Footer with responsible AI reminder
+* Small badges such as “Aggregated only,” “No grading,” “Faculty decision-support,” and “Privacy-preserving MVP”
+
+Landing page improvements:
+The entry page should feel like a real product homepage.
+Include:
+
+* Hero section
+* One-sentence value proposition
+* Three cards explaining:
+
+  1. Students submit low-stakes reflections
+  2. AI maps reflections to course learning signals
+  3. Faculty use aggregated insights to adjust instruction
+* Role selector buttons:
+
+  * Student Reflection Portal
+  * Faculty Dashboard
+  * Governance Note
+
+Student experience improvements:
+Improve the student flow with clearer trust-building copy.
+Before the form, add a short section titled “How your reflection is used.”
+Explain:
+
+* It helps faculty identify class-wide learning patterns
+* It is not used for grading
+* It is not used for ranking
+* It is not used for failure prediction
+* It is not shown as an individual student profile
+
+Improve the form:
+
+* Add helper text under confidence score
+* Add placeholder text in reflection box with an example
+* Add a visible consent statement
+* Make the thank-you page more polished with a confirmation card
+
+Faculty dashboard improvements:
+Add a top section called “Weekly Learning Pulse.”
+This should summarize:
+
+* Overall class confidence
+* Most common learning signal
+* Most concerning topic
+* Suggested faculty priority for the week
+
+Add filters:
+
+* Filter by week
+* Filter by topic
+* Filter by signal category
+
+Dashboard cards:
+
+* Total reflections
+* Average confidence
+* Support request rate
+* Top learning signal
+* Highest concern topic
+* Average severity
+* Number of instructional actions recorded
+
+Charts:
+Keep existing charts but improve presentation:
+
+* Signal Distribution bar chart
+* Confidence Trend line chart
+* Support Requests chart
+* Topic Concern table or heatmap
+
+Add a “Top Themes” section:
+Show 3–5 aggregated theme summaries, such as:
+
+* Students understand Generative AI definitions but struggle to connect them to innovation theory.
+* Students need more examples applying diffusion theory to real companies.
+* Several reflections mention pacing concerns before the team project.
+
+Add a “Recommended Instructional Adjustments” section:
+Each recommendation should include:
+
+* Pattern detected
+* Recommended faculty action
+* Why this helps
+* Related topic
+* Related learning objective
+
+Example:
+Pattern detected: High transfer gap for Generative AI.
+Recommended action: Add a short case comparing generative AI adoption to diffusion of innovation.
+Why this helps: Students appear to understand the technology but need help connecting it to course frameworks.
+
+Instructional Impact Tracker improvements:
+Make the Impact Tracker more meaningful.
+Faculty should be able to record:
+
+* Week
+* Topic
+* Action taken
+* Reason for action
+* Date
+
+Then show a simple before/after comparison when possible:
+Example:
+Topic: Generative AI
+Before action: 42% Transfer Gap
+After action: 18% Transfer Gap
+Instructional impact: Transfer Gap reduced by 24 percentage points
+
+Add a visual card called “Instructional Impact Score.”
+This can be calculated using improvements in confidence, reduced severity, or reduced support requests after an action.
+
+Governance improvements:
+Add a persistent governance reminder on all faculty pages:
+“CoursePulse AI shows aggregated instructional patterns only. It does not grade, rank, predict failure, or evaluate individual students.”
+
+Add aggregation privacy rule:
+If a filtered view has fewer than 5 reflections, do not show detailed topic-level analytics. Instead show:
+“Not enough reflections to display this view while preserving student privacy.”
+
+Governance page:
+Improve formatting and add sections:
+
+* Purpose of the tool
+* What the system does
+* What the system does not do
+* Data minimization approach
+* Human oversight
+* Classroom use boundaries
+* Responsible Use Statement
+
+Add Course Learning Intelligence Report:
+Create a new faculty page at /faculty/report.
+This should generate a demo-ready summary with:
+
+* Most confusing topics
+* Highest engagement topics
+* Confidence trend summary
+* Support needs summary
+* Instructional adjustments recorded
+* Evidence of improvement across weeks
+* Responsible AI note
+
+Add a button from the dashboard:
+“View Course Learning Intelligence Report”
+
+Seed data improvements:
+Update the seeded mock reflections so the dashboard tells a realistic story:
+
+* Early weeks have higher confidence
+* Middle weeks show confusion around Generative AI, diffusion theory, and entrepreneurship
+* Later weeks show improvement after instructional actions
+* Include some engagement signals and some support requests
+* Make reflections sound realistic and varied
+
+README:
+Update README.md with:
+
+* Project overview
+* How to run the app
+* Faculty access code
+* Explanation of student view
+* Explanation of faculty view
+* Responsible AI guardrails
+* MVP limitations
+* Future improvements
+
+Final result:
+The app should feel demo-ready for a graduate final project. It should clearly communicate that CoursePulse AI is not just a dashboard, but a responsible AI faculty decision-support tool focused on reducing feedback latency in higher education.

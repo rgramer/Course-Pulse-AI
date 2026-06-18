@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * CoursePulse AI API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import {
   useMutation,
@@ -23,11 +23,13 @@ import type {
   CourseContext,
   CourseContextInput,
   CourseContextUpdate,
+  CourseReport,
   DashboardStats,
   FacultyAction,
   FacultyActionInput,
   FacultyVerifyInput,
   FacultyVerifyResponse,
+  GetFacultyDashboardParams,
   HealthStatus,
   ReflectionInput,
   ReflectionWithSignal,
@@ -633,20 +635,27 @@ export const useVerifyFacultyAccess = <TError = ErrorType<void>,
       return useMutation(getVerifyFacultyAccessMutationOptions(options));
     }
 
-export const getGetFacultyDashboardUrl = () => {
+export const getGetFacultyDashboardUrl = (params?: GetFacultyDashboardParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/faculty/dashboard`
+  return stringifiedParams.length > 0 ? `/api/faculty/dashboard?${stringifiedParams}` : `/api/faculty/dashboard`
 }
 
 /**
- * @summary Get aggregated dashboard statistics
+ * @summary Get aggregated dashboard statistics with optional filters
  */
-export const getFacultyDashboard = async ( options?: RequestInit): Promise<DashboardStats> => {
+export const getFacultyDashboard = async (params?: GetFacultyDashboardParams, options?: RequestInit): Promise<DashboardStats> => {
 
-  return customFetch<DashboardStats>(getGetFacultyDashboardUrl(),
+  return customFetch<DashboardStats>(getGetFacultyDashboardUrl(params),
   {
     ...options,
     method: 'GET'
@@ -659,23 +668,23 @@ export const getFacultyDashboard = async ( options?: RequestInit): Promise<Dashb
 
 
 
-export const getGetFacultyDashboardQueryKey = () => {
+export const getGetFacultyDashboardQueryKey = (params?: GetFacultyDashboardParams,) => {
     return [
-    `/api/faculty/dashboard`
+    `/api/faculty/dashboard`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetFacultyDashboardQueryOptions = <TData = Awaited<ReturnType<typeof getFacultyDashboard>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFacultyDashboard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetFacultyDashboardQueryOptions = <TData = Awaited<ReturnType<typeof getFacultyDashboard>>, TError = ErrorType<unknown>>(params?: GetFacultyDashboardParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFacultyDashboard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetFacultyDashboardQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetFacultyDashboardQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFacultyDashboard>>> = ({ signal }) => getFacultyDashboard({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFacultyDashboard>>> = ({ signal }) => getFacultyDashboard(params, { signal, ...requestOptions });
 
 
 
@@ -689,15 +698,15 @@ export type GetFacultyDashboardQueryError = ErrorType<unknown>
 
 
 /**
- * @summary Get aggregated dashboard statistics
+ * @summary Get aggregated dashboard statistics with optional filters
  */
 
 export function useGetFacultyDashboard<TData = Awaited<ReturnType<typeof getFacultyDashboard>>, TError = ErrorType<unknown>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFacultyDashboard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ params?: GetFacultyDashboardParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFacultyDashboard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getGetFacultyDashboardQueryOptions(options)
+  const queryOptions = getGetFacultyDashboardQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -867,7 +876,7 @@ export const getListSignalsUrl = () => {
 }
 
 /**
- * @summary List all classified signals with aggregation by topic and week
+ * @summary List all classified signals with reflection context
  */
 export const listSignals = async ( options?: RequestInit): Promise<SignalWithContext[]> => {
 
@@ -914,7 +923,7 @@ export type ListSignalsQueryError = ErrorType<unknown>
 
 
 /**
- * @summary List all classified signals with aggregation by topic and week
+ * @summary List all classified signals with reflection context
  */
 
 export function useListSignals<TData = Awaited<ReturnType<typeof listSignals>>, TError = ErrorType<unknown>>(
@@ -923,6 +932,83 @@ export function useListSignals<TData = Awaited<ReturnType<typeof listSignals>>, 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListSignalsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetFacultyReportUrl = () => {
+
+
+
+
+  return `/api/faculty/report`
+}
+
+/**
+ * @summary Get a full Course Learning Intelligence Report
+ */
+export const getFacultyReport = async ( options?: RequestInit): Promise<CourseReport> => {
+
+  return customFetch<CourseReport>(getGetFacultyReportUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetFacultyReportQueryKey = () => {
+    return [
+    `/api/faculty/report`
+    ] as const;
+    }
+
+
+export const getGetFacultyReportQueryOptions = <TData = Awaited<ReturnType<typeof getFacultyReport>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFacultyReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFacultyReportQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFacultyReport>>> = ({ signal }) => getFacultyReport({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFacultyReport>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetFacultyReportQueryResult = NonNullable<Awaited<ReturnType<typeof getFacultyReport>>>
+export type GetFacultyReportQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get a full Course Learning Intelligence Report
+ */
+
+export function useGetFacultyReport<TData = Awaited<ReturnType<typeof getFacultyReport>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFacultyReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetFacultyReportQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

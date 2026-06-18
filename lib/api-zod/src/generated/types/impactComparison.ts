@@ -6,10 +6,12 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export interface CourseContextInput {
-  week: number;
+export interface ImpactComparison {
   topic: string;
-  learningObjective: string;
-  assignment?: string;
-  reading?: string;
+  week: number;
+  actionTaken: string;
+  signal: string;
+  beforePct: number;
+  afterPct: number;
+  improvement: number;
 }

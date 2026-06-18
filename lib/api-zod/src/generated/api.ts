@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * CoursePulse AI API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import * as zod from 'zod';
 
@@ -110,14 +110,22 @@ export const VerifyFacultyAccessResponse = zod.object({
 
 
 /**
- * @summary Get aggregated dashboard statistics
+ * @summary Get aggregated dashboard statistics with optional filters
  */
+export const GetFacultyDashboardQueryParams = zod.object({
+  "week": zod.coerce.number().optional().describe('Filter by specific week number'),
+  "topic": zod.coerce.string().optional().describe('Filter by topic name'),
+  "signal": zod.coerce.string().optional().describe('Filter by primary signal category')
+})
+
 export const GetFacultyDashboardResponse = zod.object({
   "totalReflections": zod.number(),
   "avgConfidenceScore": zod.number(),
   "mostCommonSignal": zod.string(),
   "highestConcernTopic": zod.string().nullable(),
   "percentRequestingSupport": zod.number(),
+  "avgSeverity": zod.number(),
+  "totalInstructionalActions": zod.number(),
   "signalDistribution": zod.array(zod.object({
   "signal": zod.string(),
   "count": zod.number()
@@ -134,7 +142,21 @@ export const GetFacultyDashboardResponse = zod.object({
   "reflectionCount": zod.number()
 })),
   "topConfusionThemes": zod.array(zod.string()),
-  "recommendedAdjustments": zod.array(zod.string())
+  "recommendedAdjustments": zod.array(zod.object({
+  "pattern": zod.string(),
+  "action": zod.string(),
+  "rationale": zod.string(),
+  "topic": zod.string(),
+  "learningObjective": zod.string()
+})),
+  "weeklyPulse": zod.object({
+  "avgConfidence": zod.number(),
+  "mostCommonSignal": zod.string(),
+  "highestConcernTopic": zod.string().nullable(),
+  "facultyPriority": zod.string(),
+  "insufficientData": zod.boolean()
+}),
+  "insufficientData": zod.boolean()
 })
 
 
@@ -146,6 +168,7 @@ export const ListFacultyActionsResponseItem = zod.object({
   "week": zod.number(),
   "topic": zod.string(),
   "actionTaken": zod.string(),
+  "reason": zod.string().nullable(),
   "createdAt": zod.string()
 })
 export const ListFacultyActionsResponse = zod.array(ListFacultyActionsResponseItem)
@@ -157,12 +180,13 @@ export const ListFacultyActionsResponse = zod.array(ListFacultyActionsResponseIt
 export const CreateFacultyActionBody = zod.object({
   "week": zod.number(),
   "topic": zod.string(),
-  "actionTaken": zod.string()
+  "actionTaken": zod.string(),
+  "reason": zod.string().optional()
 })
 
 
 /**
- * @summary List all classified signals with aggregation by topic and week
+ * @summary List all classified signals with reflection context
  */
 export const ListSignalsResponseItem = zod.object({
   "id": zod.number(),
@@ -177,5 +201,50 @@ export const ListSignalsResponseItem = zod.object({
   "learningObjective": zod.string()
 })
 export const ListSignalsResponse = zod.array(ListSignalsResponseItem)
+
+
+/**
+ * @summary Get a full Course Learning Intelligence Report
+ */
+export const GetFacultyReportResponse = zod.object({
+  "generatedAt": zod.string(),
+  "totalReflections": zod.number(),
+  "avgConfidence": zod.number(),
+  "supportRate": zod.number(),
+  "mostConfusingTopics": zod.array(zod.object({
+  "topic": zod.string(),
+  "avgSeverity": zod.number(),
+  "count": zod.number(),
+  "dominantSignal": zod.string(),
+  "engagementLevel": zod.string()
+})),
+  "highestEngagementTopics": zod.array(zod.object({
+  "topic": zod.string(),
+  "avgSeverity": zod.number(),
+  "count": zod.number(),
+  "dominantSignal": zod.string(),
+  "engagementLevel": zod.string()
+})),
+  "confidenceTrendSummary": zod.string(),
+  "supportNeedsSummary": zod.string(),
+  "instructionalActionsRecorded": zod.array(zod.object({
+  "id": zod.number(),
+  "week": zod.number(),
+  "topic": zod.string(),
+  "actionTaken": zod.string(),
+  "reason": zod.string().nullable(),
+  "createdAt": zod.string()
+})),
+  "impactComparisons": zod.array(zod.object({
+  "topic": zod.string(),
+  "week": zod.number(),
+  "actionTaken": zod.string(),
+  "signal": zod.string(),
+  "beforePct": zod.number(),
+  "afterPct": zod.number(),
+  "improvement": zod.number()
+})),
+  "responsibleAiNote": zod.string()
+})
 
 

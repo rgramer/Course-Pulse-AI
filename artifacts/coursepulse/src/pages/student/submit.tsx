@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft, Send, Info } from "lucide-react";
 import { Link } from "wouter";
 
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -88,33 +87,33 @@ export default function StudentSubmitPage() {
 
   return (
     <div className="min-h-screen bg-background p-6">
-      <div className="max-w-2xl mx-auto space-y-8 pb-12">
-        <Link href="/student" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground">
+      <div className="max-w-3xl mx-auto space-y-8 pb-12 pt-8">
+        <Link href="/student" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
         </Link>
 
         <div>
-          <h1 className="text-3xl font-bold text-primary">Weekly Reflection</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-4xl font-bold font-serif text-primary">Weekly Reflection</h1>
+          <p className="text-lg text-muted-foreground mt-3">
             Your reflection helps adjust the course for everyone.
           </p>
         </div>
 
-        <div className="bg-card border rounded-xl p-6 shadow-sm">
+        <div className="bg-card border rounded-2xl p-8 shadow-sm">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
                   name="week"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Week</FormLabel>
+                      <FormLabel className="text-base">Week</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="h-12">
                             <SelectValue placeholder="Select week" />
                           </SelectTrigger>
                         </FormControl>
@@ -136,7 +135,7 @@ export default function StudentSubmitPage() {
                   name="topic"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Topic</FormLabel>
+                      <FormLabel className="text-base">Topic</FormLabel>
                       <Select 
                         onValueChange={(val) => {
                           field.onChange(val);
@@ -146,7 +145,7 @@ export default function StudentSubmitPage() {
                         disabled={loadingContexts || uniqueTopics.length === 0}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="h-12">
                             <SelectValue placeholder="Select topic" />
                           </SelectTrigger>
                         </FormControl>
@@ -169,10 +168,10 @@ export default function StudentSubmitPage() {
                 name="learningObjective"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Learning Objective</FormLabel>
+                    <FormLabel className="text-base">Learning Objective</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value} disabled={!selectedTopic || availableObjectives.length === 0}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-12">
                           <SelectValue placeholder="Select specific objective" />
                         </SelectTrigger>
                       </FormControl>
@@ -193,26 +192,32 @@ export default function StudentSubmitPage() {
                 control={form.control}
                 name="confidenceScore"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confidence Score (1-5)</FormLabel>
+                  <FormItem className="bg-muted/30 p-6 rounded-xl border border-muted">
+                    <FormLabel className="text-base block mb-6">Confidence Score (1-5)</FormLabel>
                     <FormControl>
-                      <div className="flex items-center gap-4">
-                        <span className="text-sm text-muted-foreground">Confused</span>
+                      <div className="flex items-center gap-6">
+                        <span className="text-sm font-medium text-muted-foreground w-20 text-right">Confused</span>
                         <input
                           type="range"
                           min="1"
                           max="5"
                           step="1"
-                          className="w-full accent-primary"
+                          className="flex-1 accent-primary h-2 bg-secondary/20 rounded-lg appearance-none cursor-pointer"
                           {...field}
                           onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
                         />
-                        <span className="text-sm text-muted-foreground">Confident</span>
+                        <span className="text-sm font-medium text-muted-foreground w-20 text-left">Confident</span>
                       </div>
                     </FormControl>
-                    <FormDescription className="text-center font-medium text-foreground">
-                      Current rating: {field.value}
-                    </FormDescription>
+                    <div className="flex flex-col items-center mt-6 space-y-2">
+                      <div className="text-2xl font-bold text-primary bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center">
+                        {field.value}
+                      </div>
+                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
+                        <Info className="w-4 h-4" />
+                        <span>1 = very uncertain, 5 = very confident. This does not affect your grade.</span>
+                      </div>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -223,11 +228,11 @@ export default function StudentSubmitPage() {
                 name="reflectionText"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Reflection</FormLabel>
+                    <FormLabel className="text-base">Reflection</FormLabel>
                     <FormControl>
                       <Textarea 
-                        placeholder="What was most confusing? What part was clear? How are you connecting this to previous topics?" 
-                        className="min-h-[150px] resize-y"
+                        placeholder="e.g. I understand the concept of diffusion of innovation but I'm struggling to connect it to the AI governance readings. I'd benefit from a worked example..." 
+                        className="min-h-[180px] resize-y text-base p-4"
                         {...field} 
                       />
                     </FormControl>
@@ -240,12 +245,12 @@ export default function StudentSubmitPage() {
                 control={form.control}
                 name="supportRequested"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">
+                  <FormItem className="flex flex-row items-center justify-between rounded-xl border p-6 bg-card shadow-sm">
+                    <div className="space-y-1">
+                      <FormLabel className="text-base font-semibold">
                         Request Additional Resources
                       </FormLabel>
-                      <FormDescription>
+                      <FormDescription className="text-sm">
                         Flag that the class might need more reading or practice on this topic.
                       </FormDescription>
                     </div>
@@ -253,40 +258,40 @@ export default function StudentSubmitPage() {
                       <Switch
                         checked={field.value}
                         onCheckedChange={field.onChange}
+                        className="scale-125 ml-4"
                       />
                     </FormControl>
                   </FormItem>
                 )}
               />
 
-              <div className="pt-4 border-t">
-                <FormField
-                  control={form.control}
-                  name="consentGiven"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          I consent to submit this reflection for course improvement.
-                        </FormLabel>
-                        <FormDescription>
-                          This submission will be aggregated anonymously. It is not used for grading or individual evaluation.
-                        </FormDescription>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="consentGiven"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-4 p-6 bg-primary/5 border border-primary/20 rounded-xl">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="mt-1 w-6 h-6 border-primary/50 data-[state=checked]:bg-primary"
+                      />
+                    </FormControl>
+                    <div className="space-y-2 leading-none">
+                      <FormLabel className="text-base font-semibold text-foreground">
+                        I consent to submit this reflection for course improvement.
+                      </FormLabel>
+                      <FormDescription className="text-sm leading-relaxed text-foreground/80">
+                        This submission will be aggregated anonymously. It is not used for grading or individual evaluation.
+                      </FormDescription>
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-              <Button type="submit" className="w-full" disabled={submitMutation.isPending}>
+              <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={submitMutation.isPending} data-testid="submit-btn">
                 {submitMutation.isPending ? "Submitting..." : "Submit Reflection"}
-                {!submitMutation.isPending && <Send className="ml-2 w-4 h-4" />}
+                {!submitMutation.isPending && <Send className="ml-2 w-5 h-5" />}
               </Button>
 
             </form>

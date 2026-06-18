@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * CoursePulse AI API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 
 export * from './classifiedSignal';
@@ -11,15 +11,21 @@ export * from './confidenceTrendItem';
 export * from './courseContext';
 export * from './courseContextInput';
 export * from './courseContextUpdate';
+export * from './courseReport';
 export * from './dashboardStats';
 export * from './facultyAction';
 export * from './facultyActionInput';
 export * from './facultyVerifyInput';
 export * from './facultyVerifyResponse';
+export * from './getFacultyDashboardParams';
 export * from './healthStatus';
+export * from './impactComparison';
+export * from './recommendedAdjustment';
 export * from './reflection';
 export * from './reflectionInput';
 export * from './reflectionWithSignal';
+export * from './reportTopicSummary';
 export * from './signalCount';
 export * from './signalWithContext';
 export * from './topicConfusionItem';
+export * from './weeklyPulse';
