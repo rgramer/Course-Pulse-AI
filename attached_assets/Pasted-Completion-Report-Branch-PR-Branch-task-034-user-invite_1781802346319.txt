@@ -1,0 +1,42 @@
+Completion Report
+
+### Branch & PR
+- **Branch:** `task-034-user-invite-api-behavior-lock`
+- **PR URL:** https://github.com/rgramer/concisecap-ny/pull/34
+
+### Files Changed
+
+| File | Action |
+|------|--------|
+| `docs/implementation/ConciseCap_NY_user_invite_api_behavior_lock.md` | Added |
+
+No other files changed. The committed API contract lock (`docs/implementation/ConciseCap_NY_api_contract_lock.md`) did not need modification — it already defines the response envelope convention and error shape used by this lock.
+
+### Confirmations
+- ✅ No migration files were added, modified, renamed, reordered, or removed
+- ✅ No migration 034+ exists
+- ✅ No schema, RLS, index, trigger, seed, runtime API, frontend, auth-flow, deployment, provider, AI, worker, media, job, capture, packet, notification, or push behavior was added
+
+### Exact Invite Behavior Locked
+
+| Aspect | Locked Behavior |
+|--------|----------------|
+| **Auth** | Bearer token, active profile, `role = owner_admin`, non-null `company_id` |
+| **Request** | `{ email, role }` — email trimmed + lowercased |
+| **Allowed V1 roles** | `office`, `technician` only (not `owner_admin`) |
+| **DB write** | One `user_invites` row: `company_id` from profile, normalized `email`, requested `role`, `invited_by` = profile id, `invite_token_hash` (never raw token), `status = 'pending'`, `expires_at` = 7 days |
+| **Token** | High-entropy, hash stored, raw returned once in response |
+| **Duplicates** | `409 conflict` if pending non-expired invite exists for same company + email |
+| **Response** | `{ data: { invite_id, email, role, status, expires_at, invite_token, invite_url } }` |
+| **Errors** | `401 unauthenticated`, `404 not_found`, `403 permission_denied`, `400 validation_error`, `409 conflict` |
+| **Out of scope** | Accept-invite, signup, password, real email, profile creation, onboarding, frontend, notifications, deployment |
+
+### Audit/Event Ambiguity Resolution
+
+The preserved docs list "Create audit/job-independent event" as a side effect. The current `job_events` table (migration 028) requires `job_id NOT NULL` and is job-scoped. **Resolution:** No audit event is written for invite creation until a future company/user audit event table is designed in a later lock task.
+
+### Check Results
+- **`pnpm typecheck`** ✅ Pass
+- **`pnpm lint`** ✅ Pass (0 errors, 59 pre-existing warnings)
+- **`pnpm test`** ✅ All 1165 tests pass
+- **`supabase db reset`** ✅ Completes successfully — all 33 migrations apply cleanly

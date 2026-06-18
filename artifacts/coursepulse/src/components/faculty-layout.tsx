@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
-import { LogOut, LayoutDashboard, BookOpen, Target, ShieldCheck, FileText } from "lucide-react";
+import { LogOut, LayoutDashboard, BookOpen, Target, ShieldCheck, FileText, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CoursePulseLogo } from "@/components/logo";
 
 export function FacultyLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
@@ -21,6 +22,7 @@ export function FacultyLayout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: "/faculty/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/faculty/course-context", label: "Course Context", icon: BookOpen },
+    { href: "/faculty/syllabus-upload", label: "Syllabus Upload", icon: Upload },
     { href: "/faculty/impact-tracker", label: "Impact Tracker", icon: Target },
     { href: "/faculty/report", label: "Report", icon: FileText },
   ];
@@ -30,12 +32,7 @@ export function FacultyLayout({ children }: { children: React.ReactNode }) {
       <header className="bg-card border-b sticky top-0 z-20 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary text-primary-foreground rounded flex items-center justify-center font-bold">
-                CP
-              </div>
-              <span className="font-serif font-semibold text-lg text-primary tracking-tight">CoursePulse AI</span>
-            </div>
+            <CoursePulseLogo size="sm" />
             
             <nav className="hidden md:flex items-center gap-1">
               {navItems.map((item) => (

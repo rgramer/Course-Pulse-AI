@@ -1,11 +1,15 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { BookOpen, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { CoursePulseLogo } from "@/components/logo";
 
 export default function StudentIndexPage() {
   return (
     <div className="min-h-screen bg-background p-6 flex flex-col items-center py-20">
       <div className="max-w-2xl w-full mx-auto space-y-12">
+        <div className="flex justify-center pb-4">
+          <CoursePulseLogo size="md" />
+        </div>
         
         <div className="space-y-6 text-center">
           <div className="inline-flex items-center justify-center p-4 bg-secondary/10 rounded-full mb-2">

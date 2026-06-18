@@ -14,6 +14,7 @@ import FacultyDashboardPage from "@/pages/faculty/dashboard";
 import FacultyCourseContextPage from "@/pages/faculty/course-context";
 import FacultyImpactTrackerPage from "@/pages/faculty/impact-tracker";
 import FacultyReportPage from "@/pages/faculty/report";
+import FacultySyllabusUploadPage from "@/pages/faculty/syllabus-upload";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/faculty-login" component={FacultyLoginPage} />
       <Route path="/faculty/dashboard" component={FacultyDashboardPage} />
       <Route path="/faculty/course-context" component={FacultyCourseContextPage} />
+      <Route path="/faculty/syllabus-upload" component={FacultySyllabusUploadPage} />
       <Route path="/faculty/impact-tracker" component={FacultyImpactTrackerPage} />
       <Route path="/faculty/report" component={FacultyReportPage} />
 

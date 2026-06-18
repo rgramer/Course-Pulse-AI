@@ -2,16 +2,16 @@ import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, LineChart, ShieldCheck, CheckCircle2, User, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { CoursePulseLogo } from "@/components/logo";
 
 export default function IndexPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-between p-6 pb-12">
       <div className="max-w-5xl w-full space-y-16 mt-12">
         <div className="text-center space-y-6">
-          <div className="inline-flex items-center justify-center p-4 bg-primary/5 rounded-full mb-4">
-            <BookOpen className="w-10 h-10 text-primary" />
+          <div className="flex justify-center mb-8">
+            <CoursePulseLogo size="lg" showTagline={true} />
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold font-serif text-primary tracking-tight">CoursePulse AI</h1>
           <p className="text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Turning weekly student reflections into responsible faculty learning intelligence
           </p>
@@ -64,30 +64,34 @@ export default function IndexPage() {
         <div className="max-w-3xl mx-auto space-y-8 pt-8">
           <div className="grid md:grid-cols-2 gap-6">
             <Link href="/student">
-              <Card className="hover:border-primary/40 hover:shadow-lg transition-all cursor-pointer group h-full">
-                <CardContent className="p-10 flex flex-col items-center text-center space-y-4">
-                  <div className="p-4 bg-secondary/10 rounded-full group-hover:bg-secondary/20 transition-colors">
-                    <BookOpen className="w-10 h-10 text-secondary" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-foreground">Student Reflection Portal</h2>
-                </CardContent>
-              </Card>
+              <div className="group rounded-2xl border-2 border-teal-200 bg-teal-50 p-8 cursor-pointer transition-all duration-200 hover:border-teal-400 hover:bg-teal-100 hover:shadow-lg hover:-translate-y-0.5 flex flex-col items-center text-center space-y-4 h-full">
+                <div className="p-4 rounded-full bg-teal-500 group-hover:bg-teal-600 transition-colors">
+                  <BookOpen className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-2xl font-serif font-bold text-teal-900">Student Reflection Portal</h2>
+                <p className="text-teal-700">Submit your weekly reflection on course material and pacing.</p>
+                <div className="mt-2 px-6 py-2 rounded-full bg-teal-500 text-white text-sm font-semibold group-hover:bg-teal-600 transition-colors">
+                  Enter Reflection Portal &rarr;
+                </div>
+              </div>
             </Link>
 
             <Link href="/faculty-login">
-              <Card className="hover:border-primary/40 hover:shadow-lg transition-all cursor-pointer group h-full">
-                <CardContent className="p-10 flex flex-col items-center text-center space-y-4">
-                  <div className="p-4 bg-primary/10 rounded-full group-hover:bg-primary/20 transition-colors">
-                    <LineChart className="w-10 h-10 text-primary" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-foreground">Faculty Dashboard</h2>
-                </CardContent>
-              </Card>
+              <div className="group rounded-2xl border-2 border-indigo-200 bg-indigo-50 p-8 cursor-pointer transition-all duration-200 hover:border-indigo-400 hover:bg-indigo-100 hover:shadow-lg hover:-translate-y-0.5 flex flex-col items-center text-center space-y-4 h-full">
+                <div className="p-4 rounded-full bg-indigo-600 group-hover:bg-indigo-700 transition-colors">
+                  <LineChart className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-2xl font-serif font-bold text-indigo-900">Faculty Dashboard</h2>
+                <p className="text-indigo-700">Review aggregated class-wide learning patterns and signals.</p>
+                <div className="mt-2 px-6 py-2 rounded-full bg-indigo-600 text-white text-sm font-semibold group-hover:bg-indigo-700 transition-colors">
+                  Enter Faculty Dashboard &rarr;
+                </div>
+              </div>
             </Link>
           </div>
           <div className="text-center">
-            <Link href="/governance" className="text-base font-medium text-primary hover:text-primary/80 transition-colors">
-              View Governance Note &rarr;
+            <Link href="/governance" className="text-sm font-medium text-muted-foreground hover:text-foreground underline transition-colors">
+              View Governance Note
             </Link>
           </div>
         </div>

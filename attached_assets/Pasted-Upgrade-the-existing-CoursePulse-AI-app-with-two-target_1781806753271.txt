@@ -1,0 +1,156 @@
+Upgrade the existing CoursePulse AI app with two targeted improvements before final QA: visual branding polish and a faculty syllabus upload feature. Do not rebuild the app from scratch and do not remove any existing working features.
+
+Part 1: Branding and visual polish
+
+Add a simple CoursePulse AI logo to the app.
+
+The logo can be text-based or SVG-based. It should feel clean, academic, and technology-focused. Suggested concept:
+
+* A small pulse/wave icon
+* The words “CoursePulse AI”
+* Optional tagline: “Responsible Learning Intelligence”
+
+Add the logo to:
+
+* Landing page header
+* Faculty layout/header
+* Student reflection portal header
+* Governance page header
+* Report page header if appropriate
+
+Improve the landing page role selector buttons so they are clearly recognizable as clickable buttons.
+
+The “Student Reflection Portal” and “Faculty Dashboard” buttons/cards should have different visual treatments:
+
+* Student button/card: use a softer blue or teal shade
+* Faculty button/card: use a deeper indigo or purple shade
+* Governance button/card: use a neutral gray or slate shade
+
+Make sure the buttons have:
+
+* Clear hover states
+* Strong contrast
+* Rounded corners
+* Icon or visual cue if simple to add
+* Clear button labels
+* Consistent spacing
+
+The user should immediately understand that these are clickable entry points.
+
+Part 2: Faculty syllabus upload feature
+
+Add a syllabus upload feature to the faculty Course Context area.
+
+Goal:
+Allow professors to upload a Word document syllabus instead of manually typing every week, topic, reading, assignment, and learning objective.
+
+Add a new faculty page or section:
+Route: /faculty/syllabus-upload
+Navigation label: Syllabus Upload
+
+Faculty access:
+This page should only be available after faculty access code login, same as the other faculty pages.
+
+Upload requirements:
+
+* Accept .docx files for the MVP
+* If simple, also allow .txt files as a fallback
+* Do not require PDF parsing for this MVP unless it is easy and reliable
+* Display a clear note: “Uploaded syllabus content is used only to help create course context. Faculty must review and approve extracted items before import.”
+
+Backend behavior:
+
+* Add an upload endpoint for syllabus files
+* For a TypeScript/Node backend, use a reliable library such as mammoth to extract text from .docx files
+* For a Python backend, use python-docx
+* Extract raw text from the syllabus
+* Parse likely course context items into structured rows
+
+Suggested extracted fields:
+
+* Week
+* Topic
+* Learning objective
+* Reading
+* Assignment
+
+Parsing logic:
+Use simple heuristic parsing for the MVP:
+
+* Detect lines containing “Week 1,” “Week 2,” etc.
+* Detect nearby topic titles
+* Detect lines containing “Learning Objective,” “Objective,” “Students will be able to,” or “By the end of this week”
+* Detect lines containing “Reading,” “Readings,” “Article,” “Chapter”
+* Detect lines containing “Assignment,” “Lab,” “Workshop,” “Project,” or “Deliverable”
+
+Important:
+Do not automatically overwrite the existing course context.
+
+Instead, create a review screen.
+
+Review screen:
+After upload, show a table titled “Review Extracted Course Context.”
+
+Each row should show:
+
+* Week
+* Topic
+* Learning objective
+* Reading
+* Assignment
+
+Faculty should be able to:
+
+* Edit extracted rows before saving
+* Delete incorrect rows
+* Add a missing row manually
+* Click “Import to Course Context”
+
+After import:
+
+* Save approved rows into the course_context table
+* Show a confirmation message
+* Link back to Course Context editor
+
+Data safety:
+
+* Do not store the original syllabus file permanently unless necessary
+* Store only the extracted and faculty-approved course context rows
+* Add a governance note saying CoursePulse uses syllabus content only to map reflections to course topics and learning objectives
+
+Design:
+Make the Syllabus Upload page polished and simple:
+
+* Upload card
+* “How this works” explanation
+* File picker
+* Extract button
+* Review/edit table
+* Import button
+* Responsible use reminder
+
+Add this to the faculty navigation:
+
+* Dashboard
+* Course Context
+* Syllabus Upload
+* Impact Tracker
+* Report
+* Governance
+
+README update:
+Update README.md to mention:
+
+* Faculty can manually manage course context
+* Faculty can upload a .docx syllabus to generate draft course context
+* Extracted syllabus data must be reviewed before import
+* This is an MVP parser and may require faculty correction
+
+Final output:
+Summarize what was added and confirm:
+
+* The logo appears across the app
+* Student and faculty entry buttons are visually distinct
+* Faculty can upload a .docx syllabus
+* Extracted context appears in a review table before import
+* Existing dashboard, report, impact tracker, and governance features still work

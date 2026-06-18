@@ -1,11 +1,13 @@
 import { Link } from "wouter";
 import { ShieldCheck, ArrowLeft, Lock, EyeOff, Scale, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CoursePulseLogo } from "@/components/logo";
 
 export default function GovernancePage() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-3xl mx-auto pt-12 pb-24 space-y-12">
+        <CoursePulseLogo size="md" />
         <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Home
