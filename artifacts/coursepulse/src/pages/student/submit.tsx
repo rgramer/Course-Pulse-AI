@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useListCourseContexts, useSubmitReflection } from "@workspace/api-client-react";
+import { DemoFillButton } from "@/components/demo-fill";
 
 const formSchema = z.object({
   week: z.string().min(1, "Week is required"),
@@ -79,6 +80,22 @@ export default function StudentSubmitPage() {
 
   const noTopicsReady = !loadingContexts && availableWeeks.length === 0;
 
+  function fillDemoData() {
+    form.setValue("week", "3");
+    form.setValue("topic", "AI Governance & Ethics");
+    form.setValue(
+      "learningObjective",
+      "Evaluate responsible AI principles and their application to organizational decision-making"
+    );
+    form.setValue("confidenceScore", 2);
+    form.setValue(
+      "reflectionText",
+      "I understand the responsible AI principles at a conceptual level, but I'm struggling to connect them to what a data scientist would actually do differently in practice. We discussed the EU AI Act in class, but I couldn't map the accountability requirements to concrete workflow changes. A worked example with a real deployment scenario would really help me see how these principles apply."
+    );
+    form.setValue("supportRequested", true);
+    form.setValue("consentGiven", true);
+  }
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     submitMutation.mutate(
       {
@@ -106,10 +123,13 @@ export default function StudentSubmitPage() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-3xl mx-auto space-y-8 pb-12 pt-8">
-        <Link href="/student" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/student" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Link>
+          <DemoFillButton onFill={fillDemoData} />
+        </div>
 
         <div>
           <h1 className="text-4xl font-bold font-serif text-primary">Weekly Reflection</h1>

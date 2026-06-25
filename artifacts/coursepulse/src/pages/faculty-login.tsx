@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { CoursePulseLogo } from "@/components/logo";
 import { useVerifyFacultyAccess } from "@workspace/api-client-react";
+import { DemoFillButton } from "@/components/demo-fill";
 
 const formSchema = z.object({
   accessCode: z.string().min(1, "Access code is required"),
@@ -33,6 +34,10 @@ export default function FacultyLoginPage() {
       accessCode: "",
     },
   });
+
+  function fillDemoData() {
+    form.setValue("accessCode", "faculty-demo");
+  }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     verifyMutation.mutate({ data: { accessCode: values.accessCode } }, {
@@ -55,9 +60,12 @@ export default function FacultyLoginPage() {
       <CoursePulseLogo size="md" showTagline />
 
       <div className="w-full max-w-sm bg-card border shadow-sm rounded-2xl p-8 space-y-6">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold font-serif text-primary">Faculty Access</h1>
-          <p className="text-sm text-muted-foreground">Enter your institutional access code to view the dashboard.</p>
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h1 className="text-2xl font-bold font-serif text-primary">Faculty Access</h1>
+            <p className="text-sm text-muted-foreground">Enter your institutional access code to view the dashboard.</p>
+          </div>
+          <DemoFillButton onFill={fillDemoData} />
         </div>
 
         <Form {...form}>

@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "a-dJQ_UqMafD7eXI0--5O"
+uri = "file://CoursePulse_Demo_Script.md"
+type = "text"
+title = "CoursePulse AI — Demo Script"
