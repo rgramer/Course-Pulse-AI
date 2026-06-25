@@ -81,7 +81,10 @@ export default function StudentSubmitPage() {
         },
       },
       {
-        onSuccess: () => {
+        onSuccess: (result) => {
+          if (result?.signal) {
+            sessionStorage.setItem("cp_last_signal", JSON.stringify(result.signal));
+          }
           setLocation("/student/thank-you");
         },
       }
@@ -205,30 +208,38 @@ export default function StudentSubmitPage() {
                 name="confidenceScore"
                 render={({ field }) => (
                   <FormItem className="bg-muted/30 p-6 rounded-xl border border-muted">
-                    <FormLabel className="text-base block mb-6">Confidence Score (1–5)</FormLabel>
+                    <FormLabel className="text-base block mb-4">How confident do you feel about this week's material?</FormLabel>
                     <FormControl>
-                      <div className="flex items-center gap-6">
-                        <span className="text-sm font-medium text-muted-foreground w-20 text-right">Uncertain</span>
-                        <input
-                          type="range"
-                          min="1"
-                          max="5"
-                          step="1"
-                          className="flex-1 accent-primary h-2 bg-secondary/20 rounded-lg appearance-none cursor-pointer"
-                          {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
-                        />
-                        <span className="text-sm font-medium text-muted-foreground w-20 text-left">Confident</span>
+                      <div className="grid grid-cols-5 gap-2">
+                        {[
+                          { value: 1, label: "Very uncertain" },
+                          { value: 2, label: "Somewhat uncertain" },
+                          { value: 3, label: "Neutral" },
+                          { value: 4, label: "Fairly confident" },
+                          { value: 5, label: "Very confident" },
+                        ].map(({ value, label }) => {
+                          const selected = field.value === value;
+                          return (
+                            <button
+                              key={value}
+                              type="button"
+                              onClick={() => field.onChange(value)}
+                              className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                                selected
+                                  ? "border-primary bg-primary text-primary-foreground shadow-md scale-105"
+                                  : "border-border bg-background hover:border-primary/40 hover:bg-primary/5 text-muted-foreground"
+                              }`}
+                            >
+                              <span className={`text-xl font-bold ${selected ? "text-primary-foreground" : "text-foreground"}`}>{value}</span>
+                              <span className={`text-[11px] leading-tight text-center font-medium ${selected ? "text-primary-foreground/80" : "text-muted-foreground"}`}>{label}</span>
+                            </button>
+                          );
+                        })}
                       </div>
                     </FormControl>
-                    <div className="flex flex-col items-center mt-6 space-y-2">
-                      <div className="text-2xl font-bold text-primary bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center">
-                        {field.value}
-                      </div>
-                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
-                        <Info className="w-4 h-4 shrink-0" />
-                        <span>1 = very uncertain, 5 = very confident. This does not affect your grade.</span>
-                      </div>
+                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-3">
+                      <Info className="w-4 h-4 shrink-0" />
+                      <span>This does not affect your grade.</span>
                     </div>
                     <FormMessage />
                   </FormItem>
