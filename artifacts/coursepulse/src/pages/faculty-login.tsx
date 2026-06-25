@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { useLocation } from "wouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { LockKeyhole, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Link } from "wouter";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CoursePulseLogo } from "@/components/logo";
 import { useVerifyFacultyAccess } from "@workspace/api-client-react";
 
 const formSchema = z.object({
@@ -26,7 +26,7 @@ const formSchema = z.object({
 export default function FacultyLoginPage() {
   const [, setLocation] = useLocation();
   const verifyMutation = useVerifyFacultyAccess();
-  
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,44 +51,44 @@ export default function FacultyLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
-      <Card className="w-full max-w-md shadow-sm">
-        <CardHeader className="text-center space-y-2 pb-6">
-          <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-full mx-auto mb-2">
-            <LockKeyhole className="w-6 h-6 text-primary" />
-          </div>
-          <CardTitle className="text-2xl">Faculty Access</CardTitle>
-          <CardDescription>
-            Enter your institutional access code to view the dashboard.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="accessCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Access Code</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="Enter code..." {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      For this demo, use: <strong className="text-foreground">faculty-demo</strong>
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full" disabled={verifyMutation.isPending}>
-                {verifyMutation.isPending ? "Verifying..." : "Access Dashboard"}
-                {!verifyMutation.isPending && <ArrowRight className="ml-2 w-4 h-4" />}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 gap-10">
+      <CoursePulseLogo size="md" showTagline />
+
+      <div className="w-full max-w-sm bg-card border shadow-sm rounded-2xl p-8 space-y-6">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-bold font-serif text-primary">Faculty Access</h1>
+          <p className="text-sm text-muted-foreground">Enter your institutional access code to view the dashboard.</p>
+        </div>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <FormField
+              control={form.control}
+              name="accessCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Access Code</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Enter code..." className="h-11" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    For this demo, use: <strong className="text-foreground">faculty-demo</strong>
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full h-11" disabled={verifyMutation.isPending}>
+              {verifyMutation.isPending ? "Verifying..." : "Access Dashboard"}
+              {!verifyMutation.isPending && <ArrowRight className="ml-2 w-4 h-4" />}
+            </Button>
+          </form>
+        </Form>
+      </div>
+
+      <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        ← Back to home
+      </Link>
     </div>
   );
 }

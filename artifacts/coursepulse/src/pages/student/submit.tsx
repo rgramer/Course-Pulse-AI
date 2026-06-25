@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { ArrowLeft, Send, Info } from "lucide-react";
+import { ArrowLeft, Send, Info, AlertCircle } from "lucide-react";
 import { Link } from "wouter";
 
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useListCourseContexts, useSubmitReflection } from "@workspace/api-client-react";
 
 const formSchema = z.object({
@@ -64,6 +65,8 @@ export default function StudentSubmitPage() {
     .filter((c) => c.topic === selectedTopic)
     .map((c) => c.learningObjective);
 
+  const noTopicsReady = !loadingContexts && uniqueTopics.length === 0;
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     submitMutation.mutate(
       {
@@ -100,10 +103,19 @@ export default function StudentSubmitPage() {
           </p>
         </div>
 
+        {noTopicsReady && (
+          <Alert className="border-amber-200 bg-amber-50">
+            <AlertCircle className="h-4 w-4 text-amber-600" />
+            <AlertDescription className="text-amber-800">
+              Your instructor hasn't set up the course topics yet — the topic and learning objective dropdowns will be empty. Ask them to add course context before you submit.
+            </AlertDescription>
+          </Alert>
+        )}
+
         <div className="bg-card border rounded-2xl p-8 shadow-sm">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
@@ -136,17 +148,17 @@ export default function StudentSubmitPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base">Topic</FormLabel>
-                      <Select 
+                      <Select
                         onValueChange={(val) => {
                           field.onChange(val);
                           form.setValue("learningObjective", "");
-                        }} 
+                        }}
                         defaultValue={field.value}
                         disabled={loadingContexts || uniqueTopics.length === 0}
                       >
                         <FormControl>
                           <SelectTrigger className="h-12">
-                            <SelectValue placeholder="Select topic" />
+                            <SelectValue placeholder={noTopicsReady ? "No topics set up yet" : "Select topic"} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -193,10 +205,10 @@ export default function StudentSubmitPage() {
                 name="confidenceScore"
                 render={({ field }) => (
                   <FormItem className="bg-muted/30 p-6 rounded-xl border border-muted">
-                    <FormLabel className="text-base block mb-6">Confidence Score (1-5)</FormLabel>
+                    <FormLabel className="text-base block mb-6">Confidence Score (1–5)</FormLabel>
                     <FormControl>
                       <div className="flex items-center gap-6">
-                        <span className="text-sm font-medium text-muted-foreground w-20 text-right">Confused</span>
+                        <span className="text-sm font-medium text-muted-foreground w-20 text-right">Uncertain</span>
                         <input
                           type="range"
                           min="1"
@@ -214,7 +226,7 @@ export default function StudentSubmitPage() {
                         {field.value}
                       </div>
                       <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-2">
-                        <Info className="w-4 h-4" />
+                        <Info className="w-4 h-4 shrink-0" />
                         <span>1 = very uncertain, 5 = very confident. This does not affect your grade.</span>
                       </div>
                     </div>
@@ -230,10 +242,10 @@ export default function StudentSubmitPage() {
                   <FormItem>
                     <FormLabel className="text-base">Reflection</FormLabel>
                     <FormControl>
-                      <Textarea 
-                        placeholder="e.g. I understand the concept of diffusion of innovation but I'm struggling to connect it to the AI governance readings. I'd benefit from a worked example..." 
+                      <Textarea
+                        placeholder="e.g. I understand the concept of diffusion of innovation but I'm struggling to connect it to the AI governance readings. I'd benefit from a worked example..."
                         className="min-h-[180px] resize-y text-base p-4"
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -258,7 +270,7 @@ export default function StudentSubmitPage() {
                       <Switch
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        className="scale-125 ml-4"
+                        className="scale-125 ml-4 shrink-0"
                       />
                     </FormControl>
                   </FormItem>
@@ -274,7 +286,7 @@ export default function StudentSubmitPage() {
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        className="mt-1 w-6 h-6 border-primary/50 data-[state=checked]:bg-primary"
+                        className="mt-1 w-6 h-6 border-primary/50 data-[state=checked]:bg-primary shrink-0"
                       />
                     </FormControl>
                     <div className="space-y-2 leading-none">
@@ -289,9 +301,9 @@ export default function StudentSubmitPage() {
                 )}
               />
 
-              <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={submitMutation.isPending} data-testid="submit-btn">
-                {submitMutation.isPending ? "Submitting..." : "Submit Reflection"}
-                {!submitMutation.isPending && <Send className="ml-2 w-5 h-5" />}
+              <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={submitMutation.isPending || noTopicsReady} data-testid="submit-btn">
+                {submitMutation.isPending ? "Submitting..." : noTopicsReady ? "Topics not set up yet" : "Submit Reflection"}
+                {!submitMutation.isPending && !noTopicsReady && <Send className="ml-2 w-5 h-5" />}
               </Button>
 
             </form>
