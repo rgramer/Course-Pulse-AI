@@ -26,6 +26,7 @@ export function FacultyLayout({ children }: { children: React.ReactNode }) {
   }
 
   const handleLogout = () => {
+    fetch("/api/faculty/logout", { method: "POST" }).catch(() => {});
     localStorage.removeItem("facultyAuthenticated");
     setLocation("/");
   };

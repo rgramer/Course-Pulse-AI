@@ -12,6 +12,11 @@ router.post("/reflections", async (req, res): Promise<void> => {
     return;
   }
 
+  if (parsed.data.reflectionText.length > 2000) {
+    res.status(400).json({ error: "Reflection text must be 2000 characters or fewer." });
+    return;
+  }
+
   const { consentGiven, ...reflectionData } = parsed.data;
 
   if (!consentGiven) {

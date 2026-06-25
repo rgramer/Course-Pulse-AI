@@ -6,6 +6,7 @@ import {
   ListFacultyActionsResponse,
   CreateFacultyActionBody,
 } from "@workspace/api-zod";
+import { requireFacultyAuth } from "../middleware/facultyAuth";
 
 const FACULTY_ACCESS_CODE = "faculty-demo";
 const PRIVACY_MIN = 5;
@@ -22,10 +23,21 @@ router.post("/faculty/verify", async (req, res): Promise<void> => {
     res.status(401).json({ error: "Invalid access code" });
     return;
   }
+  res.cookie("cp_faculty", "1", {
+    signed: true,
+    httpOnly: true,
+    sameSite: "strict",
+    maxAge: 8 * 60 * 60 * 1000,
+  });
   res.json({ success: true });
 });
 
-router.get("/faculty/dashboard", async (req, res): Promise<void> => {
+router.post("/faculty/logout", (_req, res): void => {
+  res.clearCookie("cp_faculty");
+  res.json({ success: true });
+});
+
+router.get("/faculty/dashboard", requireFacultyAuth, async (req, res): Promise<void> => {
   const weekParam = req.query.week ? parseInt(req.query.week as string, 10) : null;
   const topicParam = req.query.topic ? (req.query.topic as string) : null;
   const signalParam = req.query.signal ? (req.query.signal as string) : null;
@@ -56,7 +68,7 @@ router.get("/faculty/dashboard", async (req, res): Promise<void> => {
 
   if (insufficientData) {
     res.json({
-      totalReflections,
+      totalReflections: 0,
       avgConfidenceScore: 0,
       mostCommonSignal: "Insufficient data",
       highestConcernTopic: null,
@@ -127,6 +139,7 @@ router.get("/faculty/dashboard", async (req, res): Promise<void> => {
   }
 
   const topicConfusion = Object.entries(topicMap)
+    .filter(([, data]) => data.count >= PRIVACY_MIN)
     .map(([topic, data]) => {
       const avgSev = data.count > 0 ? data.totalSeverity / data.count : 0;
       const mostCommon =
@@ -144,10 +157,10 @@ router.get("/faculty/dashboard", async (req, res): Promise<void> => {
     weekMap[r.week].count++;
   }
   const confidenceTrend = Object.entries(weekMap)
+    .filter(([, data]) => data.count >= PRIVACY_MIN)
     .map(([week, data]) => ({
       week: parseInt(week, 10),
       avgConfidence: data.count > 0 ? data.totalConfidence / data.count : 0,
-      reflectionCount: data.count,
     }))
     .sort((a, b) => a.week - b.week);
 
@@ -240,12 +253,12 @@ router.get("/faculty/dashboard", async (req, res): Promise<void> => {
   });
 });
 
-router.get("/faculty/actions", async (_req, res): Promise<void> => {
+router.get("/faculty/actions", requireFacultyAuth, async (_req, res): Promise<void> => {
   const rows = await db.select().from(facultyActionsTable).orderBy(facultyActionsTable.week);
   res.json(rows.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() })));
 });
 
-router.post("/faculty/actions", async (req, res): Promise<void> => {
+router.post("/faculty/actions", requireFacultyAuth, async (req, res): Promise<void> => {
   const parsed = CreateFacultyActionBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -255,22 +268,7 @@ router.post("/faculty/actions", async (req, res): Promise<void> => {
   res.status(201).json(row);
 });
 
-router.get("/faculty/signals", async (_req, res): Promise<void> => {
-  const signals = await db.select().from(classifiedSignalsTable);
-  const reflections = await db.select().from(reflectionsTable);
-  const result = signals.map((s) => {
-    const ref = reflections.find((r) => r.id === s.reflectionId);
-    return {
-      ...s,
-      week: ref?.week ?? 0,
-      topic: ref?.topic ?? "",
-      learningObjective: ref?.learningObjective ?? "",
-    };
-  });
-  res.json(result);
-});
-
-router.get("/faculty/report", async (_req, res): Promise<void> => {
+router.get("/faculty/report", requireFacultyAuth, async (_req, res): Promise<void> => {
   const reflections = await db.select().from(reflectionsTable);
   const signals = await db.select().from(classifiedSignalsTable);
   const actions = await db.select().from(facultyActionsTable);
@@ -305,19 +303,21 @@ router.get("/faculty/report", async (_req, res): Promise<void> => {
     }
   }
 
-  const topicSummaries = Object.entries(topicMap).map(([topic, data]) => {
-    const avgSev = data.count > 0 ? data.totalSeverity / data.count : 0;
-    const dominantSignal =
-      Object.entries(data.signalCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "Unknown";
-    const engRatio = data.count > 0 ? data.engagementCount / data.count : 0;
-    return {
-      topic,
-      avgSeverity: parseFloat(avgSev.toFixed(2)),
-      count: data.count,
-      dominantSignal,
-      engagementLevel: engRatio >= 0.5 ? "High" : engRatio >= 0.25 ? "Moderate" : "Low",
-    };
-  });
+  const topicSummaries = Object.entries(topicMap)
+    .filter(([, data]) => data.count >= PRIVACY_MIN)
+    .map(([topic, data]) => {
+      const avgSev = data.count > 0 ? data.totalSeverity / data.count : 0;
+      const dominantSignal =
+        Object.entries(data.signalCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "Unknown";
+      const engRatio = data.count > 0 ? data.engagementCount / data.count : 0;
+      return {
+        topic,
+        avgSeverity: parseFloat(avgSev.toFixed(2)),
+        count: data.count,
+        dominantSignal,
+        engagementLevel: engRatio >= 0.5 ? "High" : engRatio >= 0.25 ? "Moderate" : "Low",
+      };
+    });
 
   const mostConfusingTopics = [...topicSummaries].sort((a, b) => b.avgSeverity - a.avgSeverity).slice(0, 5);
   const highestEngagementTopics = [...topicSummaries]
@@ -331,6 +331,7 @@ router.get("/faculty/report", async (_req, res): Promise<void> => {
     weekMap[r.week].push(r.confidenceScore);
   }
   const weekTrends = Object.entries(weekMap)
+    .filter(([, scores]) => scores.length >= PRIVACY_MIN)
     .map(([w, scores]) => ({ week: parseInt(w, 10), avg: scores.reduce((a, b) => a + b, 0) / scores.length }))
     .sort((a, b) => a.week - b.week);
   const firstWeekAvg = weekTrends[0]?.avg ?? avgConfidence;
@@ -393,7 +394,7 @@ router.get("/faculty/report", async (_req, res): Promise<void> => {
       const ref = reflections.find((r) => r.id === s.reflectionId);
       return ref && ref.week > action.week;
     });
-    if (beforeSignals.length < 2 || afterSignals.length < 2) continue;
+    if (beforeSignals.length < PRIVACY_MIN || afterSignals.length < PRIVACY_MIN) continue;
 
     const dominantSignal = topicMap[action.topic];
     if (!dominantSignal) continue;

@@ -2,8 +2,11 @@ import { Router, type IRouter } from "express";
 import multer from "multer";
 import mammoth from "mammoth";
 import { db, courseContextTable } from "@workspace/db";
+import { requireFacultyAuth } from "../middleware/facultyAuth";
 
 const router: IRouter = Router();
+
+const MAX_IMPORT_ROWS = 100;
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -88,7 +91,7 @@ function parseSyllabusText(text: string): ParsedRow[] {
   return rows;
 }
 
-router.post("/faculty/syllabus/extract", upload.single("file"), async (req, res): Promise<void> => {
+router.post("/faculty/syllabus/extract", requireFacultyAuth, upload.single("file"), async (req, res): Promise<void> => {
   if (!req.file) {
     res.status(400).json({ error: "No file uploaded. Please upload a .docx or .txt file." });
     return;
@@ -117,11 +120,16 @@ router.post("/faculty/syllabus/extract", upload.single("file"), async (req, res)
   res.json({ rows, rawLength: text.length });
 });
 
-router.post("/faculty/syllabus/import", async (req, res): Promise<void> => {
+router.post("/faculty/syllabus/import", requireFacultyAuth, async (req, res): Promise<void> => {
   const { rows } = req.body as { rows: ParsedRow[] };
 
   if (!Array.isArray(rows) || rows.length === 0) {
     res.status(400).json({ error: "No rows provided for import." });
+    return;
+  }
+
+  if (rows.length > MAX_IMPORT_ROWS) {
+    res.status(400).json({ error: `Import limited to ${MAX_IMPORT_ROWS} rows at a time.` });
     return;
   }
 

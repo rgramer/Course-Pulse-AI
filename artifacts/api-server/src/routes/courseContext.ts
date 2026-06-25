@@ -9,6 +9,7 @@ import {
   UpdateCourseContextResponse,
   DeleteCourseContextParams,
 } from "@workspace/api-zod";
+import { requireFacultyAuth } from "../middleware/facultyAuth";
 
 const router: IRouter = Router();
 
@@ -23,7 +24,7 @@ router.get("/course-contexts", async (req, res): Promise<void> => {
   res.json(ListCourseContextsResponse.parse(rows));
 });
 
-router.post("/course-contexts", async (req, res): Promise<void> => {
+router.post("/course-contexts", requireFacultyAuth, async (req, res): Promise<void> => {
   const parsed = CreateCourseContextBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -33,7 +34,7 @@ router.post("/course-contexts", async (req, res): Promise<void> => {
   res.status(201).json(row);
 });
 
-router.patch("/course-contexts/:id", async (req, res): Promise<void> => {
+router.patch("/course-contexts/:id", requireFacultyAuth, async (req, res): Promise<void> => {
   const params = UpdateCourseContextParams.safeParse(req.params);
   if (!params.success) {
     res.status(400).json({ error: params.error.message });
@@ -56,7 +57,7 @@ router.patch("/course-contexts/:id", async (req, res): Promise<void> => {
   res.json(UpdateCourseContextResponse.parse(row));
 });
 
-router.delete("/course-contexts/:id", async (req, res): Promise<void> => {
+router.delete("/course-contexts/:id", requireFacultyAuth, async (req, res): Promise<void> => {
   const params = DeleteCourseContextParams.safeParse(req.params);
   if (!params.success) {
     res.status(400).json({ error: params.error.message });
