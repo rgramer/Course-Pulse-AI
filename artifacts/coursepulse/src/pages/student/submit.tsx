@@ -58,14 +58,26 @@ export default function StudentSubmitPage() {
     },
   });
 
+  const selectedWeek = form.watch("week");
   const selectedTopic = form.watch("topic");
 
-  const uniqueTopics = Array.from(new Set((courseContexts || []).map((c) => c.topic)));
+  const availableWeeks = Array.from(
+    new Set((courseContexts || []).map((c) => c.week))
+  ).sort((a, b) => a - b);
+
+  const uniqueTopics = Array.from(
+    new Set(
+      (courseContexts || [])
+        .filter((c) => !selectedWeek || c.week === parseInt(selectedWeek, 10))
+        .map((c) => c.topic)
+    )
+  );
+
   const availableObjectives = (courseContexts || [])
-    .filter((c) => c.topic === selectedTopic)
+    .filter((c) => c.topic === selectedTopic && (!selectedWeek || c.week === parseInt(selectedWeek, 10)))
     .map((c) => c.learningObjective);
 
-  const noTopicsReady = !loadingContexts && uniqueTopics.length === 0;
+  const noTopicsReady = !loadingContexts && availableWeeks.length === 0;
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     submitMutation.mutate(
@@ -126,14 +138,21 @@ export default function StudentSubmitPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-base">Week</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        value={field.value}
+                        onValueChange={(val) => {
+                          field.onChange(val);
+                          form.setValue("topic", "");
+                          form.setValue("learningObjective", "");
+                        }}
+                      >
                         <FormControl>
                           <SelectTrigger className="h-12">
                             <SelectValue placeholder="Select week" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Array.from({ length: 10 }, (_, i) => i + 1).map((week) => (
+                          {availableWeeks.map((week) => (
                             <SelectItem key={week} value={week.toString()}>
                               Week {week}
                             </SelectItem>

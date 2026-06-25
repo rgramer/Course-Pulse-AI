@@ -1,7 +1,10 @@
 /**
  * Demo seed script — populates CoursePulse AI with realistic data
  * matching the presentation examples (Diffusion of Innovation use case,
- * W1: 4.2 → W2: 3.8 → W3: 3.4 confidence trend).
+ * W1: 4.2 → W2: 3.9 → W3: 3.1 → W4: 4.3 confidence trend).
+ *
+ * Week 4 adds post-intervention Diffusion of Innovation reflections so
+ * the "Evidence of Improvement" section in the report activates.
  *
  * Safe to run multiple times — skips if data already exists.
  * Run: pnpm --filter @workspace/scripts run seed
@@ -17,11 +20,9 @@ import {
 async function seed() {
   console.log("🌱 CoursePulse AI — demo seed starting…");
 
-  // ── Guard: skip if reflections already exist ──────────────────────────────
   const existing = await db.select().from(reflectionsTable);
   if (existing.length > 0) {
     console.log(`⏭  ${existing.length} reflections already present — skipping seed.`);
-    console.log("   To reseed, clear the tables first.");
     process.exit(0);
   }
 
@@ -33,7 +34,6 @@ async function seed() {
       topic: "Foundations of Emerging Technologies",
       learningObjective: "Identify key categories of emerging technologies and explain their societal impact",
       reading: "Rogers (2003) — Diffusion of Innovations, Ch. 1",
-      assignment: undefined,
     },
     {
       week: 2,
@@ -49,12 +49,15 @@ async function seed() {
       reading: "EU AI Act (2024) summary; NIST AI RMF Overview; FERPA & GDPR comparison brief",
       assignment: "Governance Memo: Propose an AI policy for a higher-ed institution",
     },
+    {
+      week: 4,
+      topic: "Diffusion of Innovation Theory",
+      learningObjective: "Apply Rogers' framework to real-world case studies using current AI and platform technologies",
+      assignment: "Workshop: Map ChatGPT / generative AI adoption to Rogers' five stages using market data",
+    },
   ]);
 
   // ── 2. Reflections + Classified Signals ──────────────────────────────────
-  // Week 1 — avg confidence ≈ 4.2 (high engagement, comprehension)
-  // Week 2 — avg confidence ≈ 3.9 (application gap dominant — matches slide 7)
-  // Week 3 — avg confidence ≈ 3.1 (pacing concern, some support need)
   console.log("→ Inserting reflections and signals…");
 
   const reflectionData: Array<{
@@ -72,7 +75,7 @@ async function seed() {
       signal: {
         primarySignal: "Engagement Signal", secondarySignal: "Comprehension", severityScore: 0,
         themeSummary: "Student shows curiosity, motivation, or enthusiasm about Foundations of Emerging Technologies.",
-        recommendedAction: "Capitalize on engagement by connecting upcoming topics to students' expressed interests and curiosity.",
+        recommendedAction: "Capitalize on engagement by connecting upcoming topics to students' expressed interests.",
       },
     },
     {
@@ -98,7 +101,7 @@ async function seed() {
       signal: {
         primarySignal: "Engagement Signal", secondarySignal: null, severityScore: 0,
         themeSummary: "Student shows curiosity, motivation, or enthusiasm about Foundations of Emerging Technologies.",
-        recommendedAction: "Capitalize on engagement by connecting upcoming topics to students' expressed interests and curiosity.",
+        recommendedAction: "Capitalize on engagement by connecting upcoming topics to students' expressed interests.",
       },
     },
     {
@@ -106,7 +109,7 @@ async function seed() {
         week: 1, topic: "Foundations of Emerging Technologies",
         learningObjective: "Identify key categories of emerging technologies and explain their societal impact",
         confidenceScore: 4, supportRequested: false,
-        reflectionText: "The lecture was well-organized. I grasped the foundational concepts and the progression from basic to complex felt manageable. Looking forward to how we apply these next week.",
+        reflectionText: "The lecture was well-organized. I grasped the foundational concepts and the progression from basic to complex felt manageable. Looking forward to applying these next week.",
       },
       signal: {
         primarySignal: "Comprehension", secondarySignal: null, severityScore: 0,
@@ -124,7 +127,7 @@ async function seed() {
       signal: {
         primarySignal: "Engagement Signal", secondarySignal: "Comprehension", severityScore: 0,
         themeSummary: "Student shows curiosity, motivation, or enthusiasm about Foundations of Emerging Technologies.",
-        recommendedAction: "Capitalize on engagement by connecting upcoming topics to students' expressed interests and curiosity.",
+        recommendedAction: "Capitalize on engagement by connecting upcoming topics to students' expressed interests.",
       },
     },
     {
@@ -136,7 +139,7 @@ async function seed() {
       },
       signal: {
         primarySignal: "Application Gap", secondarySignal: null, severityScore: 2,
-        themeSummary: "Student understands Foundations of Emerging Technologies theoretically but is uncertain how to apply or practice the concept concretely.",
+        themeSummary: "Student understands Foundations of Emerging Technologies theoretically but is uncertain how to apply the concept concretely.",
         recommendedAction: "Add a hands-on exercise, case study, or practice problem that gives students a concrete opportunity to apply the concept.",
       },
     },
@@ -151,7 +154,7 @@ async function seed() {
       },
       signal: {
         primarySignal: "Application Gap", secondarySignal: null, severityScore: 1,
-        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply or practice the concept concretely.",
+        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply it concretely.",
         recommendedAction: "Add a hands-on exercise, case study, or practice problem that gives students a concrete opportunity to apply the concept.",
       },
     },
@@ -164,7 +167,7 @@ async function seed() {
       },
       signal: {
         primarySignal: "Application Gap", secondarySignal: null, severityScore: 1,
-        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply or practice the concept concretely.",
+        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply it concretely.",
         recommendedAction: "Add a hands-on exercise, case study, or practice problem that gives students a concrete opportunity to apply the concept.",
       },
     },
@@ -177,7 +180,7 @@ async function seed() {
       },
       signal: {
         primarySignal: "Application Gap", secondarySignal: "Transfer Gap", severityScore: 1,
-        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply or practice the concept concretely.",
+        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply it concretely.",
         recommendedAction: "Add a hands-on exercise, case study, or practice problem that gives students a concrete opportunity to apply the concept.",
       },
     },
@@ -190,7 +193,7 @@ async function seed() {
       },
       signal: {
         primarySignal: "Transfer Gap", secondarySignal: "Application Gap", severityScore: 2,
-        themeSummary: "Student understands the basic concept of Diffusion of Innovation Theory but struggles to connect it to other frameworks or real-world contexts.",
+        themeSummary: "Student understands the basic concept of Diffusion of Innovation Theory but struggles to connect it to real-world contexts.",
         recommendedAction: "Provide a worked example connecting the topic to a current technology or real-world case. Use analogies to bridge concepts.",
       },
     },
@@ -203,7 +206,7 @@ async function seed() {
       },
       signal: {
         primarySignal: "Application Gap", secondarySignal: "Engagement Signal", severityScore: 1,
-        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply or practice the concept concretely.",
+        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply it concretely.",
         recommendedAction: "Add a hands-on exercise, case study, or practice problem that gives students a concrete opportunity to apply the concept.",
       },
     },
@@ -216,7 +219,7 @@ async function seed() {
       },
       signal: {
         primarySignal: "Application Gap", secondarySignal: null, severityScore: 1,
-        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply or practice the concept concretely.",
+        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply it concretely.",
         recommendedAction: "Add a hands-on exercise, case study, or practice problem that gives students a concrete opportunity to apply the concept.",
       },
     },
@@ -229,7 +232,7 @@ async function seed() {
       },
       signal: {
         primarySignal: "Application Gap", secondarySignal: null, severityScore: 2,
-        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply or practice the concept concretely.",
+        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply it concretely.",
         recommendedAction: "Add a hands-on exercise, case study, or practice problem that gives students a concrete opportunity to apply the concept.",
       },
     },
@@ -253,7 +256,7 @@ async function seed() {
         week: 3, topic: "AI Governance & Ethics",
         learningObjective: "Evaluate responsible AI principles and their application to organizational decision-making",
         confidenceScore: 3, supportRequested: false,
-        reflectionText: "There's too much content for one session. We covered a lot of ground quickly and I'm not sure what to prioritize. A summary or comparison chart of the frameworks would really help.",
+        reflectionText: "There's too much content for one session. We covered a lot of ground quickly and I'm not sure what to prioritize. A summary or comparison chart of the frameworks would help.",
       },
       signal: {
         primarySignal: "Pacing Concern", secondarySignal: null, severityScore: 2,
@@ -270,8 +273,8 @@ async function seed() {
       },
       signal: {
         primarySignal: "Support Need", secondarySignal: "Pacing Concern", severityScore: 3,
-        themeSummary: "Student is experiencing significant difficulty with AI Governance & Ethics and has requested or implied a need for additional instructional support.",
-        recommendedAction: "Reach out proactively with office hours or an additional support session. Consider offering a brief check-in with struggling students.",
+        themeSummary: "Student is experiencing significant difficulty with AI Governance & Ethics and has requested additional instructional support.",
+        recommendedAction: "Reach out proactively with office hours or an additional support session.",
       },
     },
     {
@@ -296,8 +299,8 @@ async function seed() {
       },
       signal: {
         primarySignal: "Transfer Gap", secondarySignal: null, severityScore: 1,
-        themeSummary: "Student understands the basic concept of AI Governance & Ethics but struggles to connect it to other frameworks or real-world contexts.",
-        recommendedAction: "Provide a worked example connecting the topic to a current technology or real-world case. Use analogies to bridge concepts.",
+        themeSummary: "Student understands the basic concept of AI Governance & Ethics but struggles to connect it to real-world contexts.",
+        recommendedAction: "Provide a worked example connecting the topic to a current technology or real-world case.",
       },
     },
     {
@@ -309,8 +312,8 @@ async function seed() {
       },
       signal: {
         primarySignal: "Support Need", secondarySignal: null, severityScore: 3,
-        themeSummary: "Student is experiencing significant difficulty with AI Governance & Ethics and has requested or implied a need for additional instructional support.",
-        recommendedAction: "Reach out proactively with office hours or an additional support session. Consider offering a brief check-in with struggling students.",
+        themeSummary: "Student is experiencing significant difficulty with AI Governance & Ethics and has requested additional instructional support.",
+        recommendedAction: "Reach out proactively with office hours or an additional support session.",
       },
     },
     {
@@ -318,12 +321,92 @@ async function seed() {
         week: 3, topic: "AI Governance & Ethics",
         learningObjective: "Evaluate responsible AI principles and their application to organizational decision-making",
         confidenceScore: 4, supportRequested: false,
-        reflectionText: "I'm curious about how AI governance plays out in practice, but the session covered a lot of ground. A structured comparison of NIST vs EU AI Act vs FERPA would help me organize my thinking.",
+        reflectionText: "I'm curious about how AI governance plays out in practice, but the session covered a lot of ground. A structured comparison of NIST vs EU AI Act vs FERPA would help organize my thinking.",
       },
       signal: {
         primarySignal: "Pacing Concern", secondarySignal: "Engagement Signal", severityScore: 1,
         themeSummary: "Student finds the pacing of AI Governance & Ethics content too fast or the volume too high to process effectively.",
         recommendedAction: "Consider slowing the pace for the next session, adding a review activity, or breaking concepts into smaller segments.",
+      },
+    },
+
+    // ── Week 4: Diffusion of Innovation — post-intervention (evidence of improvement) ──
+    {
+      reflection: {
+        week: 4, topic: "Diffusion of Innovation Theory",
+        learningObjective: "Apply Rogers' framework to real-world case studies using current AI and platform technologies",
+        confidenceScore: 5, supportRequested: false,
+        reflectionText: "The ChatGPT case study was exactly what I needed. Mapping the adopter categories to actual user growth data made the whole framework click. I finally get how to use this in practice.",
+      },
+      signal: {
+        primarySignal: "Comprehension", secondarySignal: "Engagement Signal", severityScore: 0,
+        themeSummary: "Student demonstrates positive comprehension and engagement with Diffusion of Innovation Theory content.",
+        recommendedAction: "Continue current instructional approach. Consider increasing challenge or extending application opportunities.",
+      },
+    },
+    {
+      reflection: {
+        week: 4, topic: "Diffusion of Innovation Theory",
+        learningObjective: "Apply Rogers' framework to real-world case studies using current AI and platform technologies",
+        confidenceScore: 5, supportRequested: false,
+        reflectionText: "Working through the workshop with real data was really effective. I could see exactly how ChatGPT moved from early adopters to early majority. Much more useful than the lecture alone.",
+      },
+      signal: {
+        primarySignal: "Engagement Signal", secondarySignal: "Comprehension", severityScore: 0,
+        themeSummary: "Student shows curiosity, motivation, or enthusiasm about Diffusion of Innovation Theory.",
+        recommendedAction: "Capitalize on engagement by connecting upcoming topics to students' expressed interests.",
+      },
+    },
+    {
+      reflection: {
+        week: 4, topic: "Diffusion of Innovation Theory",
+        learningObjective: "Apply Rogers' framework to real-world case studies using current AI and platform technologies",
+        confidenceScore: 4, supportRequested: false,
+        reflectionText: "I feel much more confident about applying the diffusion framework now. The case study gave me a concrete template I can use for the assignment and future analysis.",
+      },
+      signal: {
+        primarySignal: "Comprehension", secondarySignal: null, severityScore: 0,
+        themeSummary: "Student demonstrates positive comprehension and engagement with Diffusion of Innovation Theory content.",
+        recommendedAction: "Continue current instructional approach. Consider increasing challenge or extending application opportunities.",
+      },
+    },
+    {
+      reflection: {
+        week: 4, topic: "Diffusion of Innovation Theory",
+        learningObjective: "Apply Rogers' framework to real-world case studies using current AI and platform technologies",
+        confidenceScore: 4, supportRequested: false,
+        reflectionText: "This week's workshop really helped. I can now apply the adopter categories to real examples. Still working on distinguishing laggards from late majority but overall much clearer.",
+      },
+      signal: {
+        primarySignal: "Comprehension", secondarySignal: null, severityScore: 0,
+        themeSummary: "Student demonstrates positive comprehension and engagement with Diffusion of Innovation Theory content.",
+        recommendedAction: "Continue current instructional approach. Consider increasing challenge or extending application opportunities.",
+      },
+    },
+    {
+      reflection: {
+        week: 4, topic: "Diffusion of Innovation Theory",
+        learningObjective: "Apply Rogers' framework to real-world case studies using current AI and platform technologies",
+        confidenceScore: 4, supportRequested: false,
+        reflectionText: "The real-world data made this much more concrete. I'm starting to see how to apply this framework to my own company's product adoption. Interesting and relevant.",
+      },
+      signal: {
+        primarySignal: "Engagement Signal", secondarySignal: null, severityScore: 0,
+        themeSummary: "Student shows curiosity, motivation, or enthusiasm about Diffusion of Innovation Theory.",
+        recommendedAction: "Capitalize on engagement by connecting upcoming topics to students' expressed interests.",
+      },
+    },
+    {
+      reflection: {
+        week: 4, topic: "Diffusion of Innovation Theory",
+        learningObjective: "Apply Rogers' framework to real-world case studies using current AI and platform technologies",
+        confidenceScore: 3, supportRequested: false,
+        reflectionText: "I understand the framework better now after the workshop. I still need more practice applying it independently, but the case study helped bridge the gap from theory to practice.",
+      },
+      signal: {
+        primarySignal: "Application Gap", secondarySignal: null, severityScore: 2,
+        themeSummary: "Student understands Diffusion of Innovation Theory theoretically but is uncertain how to apply it independently.",
+        recommendedAction: "Add a hands-on exercise, case study, or practice problem that gives students a concrete opportunity to apply the concept.",
       },
     },
   ];
@@ -339,8 +422,8 @@ async function seed() {
     {
       week: 2,
       topic: "Diffusion of Innovation Theory",
-      actionTaken: "Added real-world case study: mapped ChatGPT adoption (2022–2024) to Rogers' Diffusion of Innovation stages. Students analyzed adopter category transitions using actual market data and user growth curves.",
-      reason: "Dashboard showed 6/7 Week 2 reflections flagged Application Gap — students understand theory but cannot apply it to real technologies.",
+      actionTaken: "Added real-world case study workshop: mapped ChatGPT adoption (2022–2024) to Rogers' Diffusion of Innovation stages. Students analyzed adopter category transitions using actual user growth market data.",
+      reason: "Dashboard showed 6/7 Week 2 reflections flagged Application Gap — students understand the theory but cannot apply it to real technologies.",
     },
     {
       week: 3,
@@ -351,10 +434,11 @@ async function seed() {
   ]);
 
   console.log("✅ Seed complete!");
-  console.log("   • 3 course context rows");
+  console.log("   • 4 course context rows (including Week 4 post-intervention)");
   console.log(`   • ${reflectionData.length} reflections + classified signals`);
   console.log("   • 2 faculty actions");
-  console.log("\n   Confidence trend: W1 ≈ 4.2 → W2 ≈ 3.9 → W3 ≈ 3.1 (matches presentation slide 10)");
+  console.log("\n   Confidence trend: W1 ≈ 4.2 → W2 ≈ 3.9 → W3 ≈ 3.1 → W4 ≈ 4.2 (recovery)");
+  console.log("   Evidence of Improvement: Application Gap W2 86% → W4 17% (after case study)");
   process.exit(0);
 }
 

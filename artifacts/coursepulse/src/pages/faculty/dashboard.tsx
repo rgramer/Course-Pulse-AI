@@ -8,9 +8,19 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
+  BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   LineChart, Line, ReferenceLine
 } from "recharts";
+
+const SIGNAL_COLORS: Record<string, string> = {
+  "Comprehension":       "#22c55e",
+  "Engagement Signal":   "#14b8a6",
+  "Application Gap":     "#f59e0b",
+  "Transfer Gap":        "#f97316",
+  "Definitional Confusion": "#eab308",
+  "Pacing Concern":      "#fb923c",
+  "Support Need":        "#ef4444",
+};
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -252,7 +262,7 @@ export default function FacultyDashboardPage() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between space-y-0 pb-2">
                     <p className="text-sm font-medium text-muted-foreground">Avg Severity</p>
-                    <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                    <Activity className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <div className="text-2xl font-bold text-foreground">{stats.avgSeverity?.toFixed(1) || "0.0"} <span className="text-sm text-muted-foreground font-normal">/ 3.0</span></div>
                 </CardContent>
@@ -294,7 +304,11 @@ export default function FacultyDashboardPage() {
                         itemStyle={{ color: 'hsl(var(--foreground))' }}
                         cursor={{ fill: 'hsl(var(--muted))' }}
                       />
-                      <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} maxBarSize={50} />
+                      <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={50}>
+                        {stats.signalDistribution?.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={SIGNAL_COLORS[entry.signal] ?? "hsl(var(--primary))"} />
+                        ))}
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -311,7 +325,7 @@ export default function FacultyDashboardPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
                       <XAxis dataKey="week" tickFormatter={(v) => `W${v}`} tick={{fontSize: 12}} stroke="hsl(var(--muted-foreground))" />
                       <YAxis domain={[0, 5]} ticks={[1, 2, 3, 4, 5]} tick={{fontSize: 12}} stroke="hsl(var(--muted-foreground))" />
-                      <ReferenceLine y={3} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" label={{ position: 'top', value: 'Target (3.0)', fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
+                      <ReferenceLine y={3} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" label={{ position: 'top', value: 'Midpoint (3.0)', fill: 'hsl(var(--muted-foreground))', fontSize: 11 }} />
                       <Tooltip 
                         contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
                         labelFormatter={(v) => `Week ${v}`}
@@ -326,8 +340,8 @@ export default function FacultyDashboardPage() {
             {/* Topic Confusion Table */}
             <Card>
               <CardHeader>
-                <CardTitle>Topic Confusion Heatmap</CardTitle>
-                <CardDescription>Topics ordered by highest confusion severity (0-3 scale)</CardDescription>
+                <CardTitle>Topic Learning Signal Breakdown</CardTitle>
+                <CardDescription>Topics ordered by highest confusion severity (0–3 scale)</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">

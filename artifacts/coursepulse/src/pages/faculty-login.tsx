@@ -69,7 +69,7 @@ export default function FacultyLoginPage() {
                 <FormItem>
                   <FormLabel>Access Code</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Enter code..." className="h-11" {...field} />
+                    <Input type="password" placeholder="Enter code..." className="h-11" autoComplete="off" {...field} />
                   </FormControl>
                   <FormDescription>
                     For this demo, use: <strong className="text-foreground">faculty-demo</strong>

@@ -157,9 +157,9 @@ export default function FacultyImpactTrackerPage() {
               <Target className="w-8 h-8 text-primary" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-foreground mb-1">Instructional Impact Score</h2>
+              <h2 className="text-lg font-bold text-foreground mb-1">Instructional Adjustments This Term</h2>
               <p className="text-muted-foreground">
-                You have made <strong className="text-primary">{totalActions}</strong> instructional adjustments based on learning intelligence this term.
+                You have recorded <strong className="text-primary">{totalActions}</strong> adjustments based on course learning intelligence. Each one appears in the Intelligence Report.
               </p>
             </div>
           </CardContent>
