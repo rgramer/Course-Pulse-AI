@@ -71,7 +71,12 @@ export function FacultyLayout({ children }: { children: React.ReactNode }) {
               </SheetContent>
             </Sheet>
 
-            <CoursePulseLogo size="sm" />
+            <div className="flex items-center gap-2">
+              <CoursePulseLogo size="sm" />
+              <span className="hidden sm:inline-block text-[10px] font-semibold tracking-widest uppercase bg-primary text-primary-foreground rounded-full px-2 py-0.5 leading-none">
+                NYU SPS
+              </span>
+            </div>
 
             {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-1">
