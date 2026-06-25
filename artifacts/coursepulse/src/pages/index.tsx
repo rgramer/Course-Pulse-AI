@@ -6,7 +6,7 @@ import { CoursePulseLogo } from "@/components/logo";
 
 export default function IndexPage() {
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-between p-6 pb-12">
+    <div className="min-h-screen bg-background flex flex-col items-center p-6 pb-16">
       <div className="max-w-5xl w-full space-y-16 mt-12">
         <div className="text-center space-y-6">
           <div className="flex justify-center mb-8">
@@ -108,14 +108,25 @@ export default function IndexPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl w-full mt-24 text-center space-y-3">
-        <ShieldCheck className="w-6 h-6 text-muted-foreground mx-auto" />
-        <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-          CoursePulse AI shows aggregated instructional patterns only. It does not grade, rank, predict failure, or evaluate individual students.
-        </p>
+      {/* Footer */}
+      <div className="max-w-3xl w-full mt-16 border-t pt-10 text-center space-y-3">
+        <div className="flex items-center justify-center gap-2 text-muted-foreground">
+          <ShieldCheck className="w-5 h-5" />
+          <p className="text-sm max-w-2xl">
+            CoursePulse AI shows aggregated instructional patterns only. It does not grade, rank, predict failure, or evaluate individual students.
+          </p>
+        </div>
         <Link href="/governance" className="text-sm font-medium text-muted-foreground hover:text-foreground underline underline-offset-4">
           Read Responsible Use Policy
         </Link>
+        <div className="pt-6 space-y-1">
+          <p className="text-xs text-muted-foreground/60 font-medium">
+            Angelah Laba &middot; Russel Gramer &middot; Matthew Lukacs &middot; David Petrusev
+          </p>
+          <p className="text-xs text-muted-foreground/50">
+            MS in Management &amp; Analytics &middot; Emerging Technologies – Summer 2026 &middot; NYU SPS
+          </p>
+        </div>
       </div>
     </div>
   );
