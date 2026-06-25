@@ -108,10 +108,10 @@ export default function IndexPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="max-w-3xl w-full mt-16 border-t pt-10 text-center space-y-3">
+      {/* Footer — governance note */}
+      <div className="max-w-3xl w-full mt-16 text-center space-y-3">
         <div className="flex items-center justify-center gap-2 text-muted-foreground">
-          <ShieldCheck className="w-5 h-5" />
+          <ShieldCheck className="w-5 h-5 shrink-0" />
           <p className="text-sm max-w-2xl">
             CoursePulse AI shows aggregated instructional patterns only. It does not grade, rank, predict failure, or evaluate individual students.
           </p>
@@ -119,13 +119,37 @@ export default function IndexPage() {
         <Link href="/governance" className="text-sm font-medium text-muted-foreground hover:text-foreground underline underline-offset-4">
           Read Responsible Use Policy
         </Link>
-        <div className="pt-6 space-y-1">
-          <p className="text-xs text-muted-foreground/60 font-medium">
-            Angelah Laba &middot; Russel Gramer &middot; Matthew Lukacs &middot; David Petrusev
-          </p>
-          <p className="text-xs text-muted-foreground/50">
-            MS in Management &amp; Analytics &middot; Emerging Technologies – Summer 2026 &middot; NYU SPS
-          </p>
+      </div>
+
+      {/* Footer — NYU institutional branding */}
+      <div className="w-full mt-12 border-t bg-[#57068C]">
+        <div className="max-w-5xl mx-auto px-8 py-10 flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
+          {/* NYU logo lockup */}
+          <div className="flex items-center gap-4">
+            <span className="text-5xl font-bold text-white leading-none tracking-tight" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+              NYU
+            </span>
+            <div className="flex flex-col gap-0.5">
+              <span className="text-white text-sm font-semibold tracking-wide leading-tight">New York University</span>
+              <span className="text-white/70 text-xs tracking-wide leading-tight">School of Professional Studies</span>
+            </div>
+          </div>
+
+          {/* Divider — desktop only */}
+          <div className="hidden md:block w-px self-stretch bg-white/20" />
+
+          {/* Course + team */}
+          <div className="flex flex-col items-center md:items-end gap-1 text-right">
+            <p className="text-white font-semibold text-sm tracking-wide">
+              Emerging Technologies &mdash; Summer 2026
+            </p>
+            <p className="text-white/70 text-sm">
+              MS in Management &amp; Analytics
+            </p>
+            <p className="text-white/50 text-xs mt-2">
+              Angelah Laba &middot; Russel Gramer &middot; Matthew Lukacs &middot; David Petrusev
+            </p>
+          </div>
         </div>
       </div>
     </div>
