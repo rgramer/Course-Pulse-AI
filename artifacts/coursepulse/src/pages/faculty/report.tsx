@@ -122,7 +122,7 @@ export default function FacultyReportPage() {
             ) : (
               <div className="space-y-3">
                 {report.mostConfusingTopics.map((topic, i) => (
-                  <Card key={i} className="border-l-4" style={{ borderLeftColor: topic.avgSeverity >= 2 ? 'hsl(var(--destructive))' : 'hsl(var(--amber-500))' }}>
+                  <Card key={i} className="border-l-4" style={{ borderLeftColor: topic.avgSeverity >= 2 ? 'hsl(var(--destructive))' : '#f59e0b' }}>
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start mb-2">
                         <h4 className="font-bold text-foreground">{topic.topic}</h4>

@@ -336,11 +336,31 @@ router.get("/faculty/report", async (_req, res): Promise<void> => {
   const firstWeekAvg = weekTrends[0]?.avg ?? avgConfidence;
   const lastWeekAvg = weekTrends[weekTrends.length - 1]?.avg ?? avgConfidence;
   const trendDelta = lastWeekAvg - firstWeekAvg;
+  const firstWeek = weekTrends[0]?.week ?? 1;
+  const lastWeek = weekTrends[weekTrends.length - 1]?.week ?? 10;
+  const minEntry = weekTrends.reduce((m, w) => (w.avg < m.avg ? w : m), weekTrends[0] ?? { avg: avgConfidence, week: 1 });
+  const maxEntry = weekTrends.reduce((m, w) => (w.avg > m.avg ? w : m), weekTrends[0] ?? { avg: avgConfidence, week: 1 });
+  const isVShape =
+    weekTrends.length >= 3 &&
+    minEntry.week !== firstWeek &&
+    minEntry.week !== lastWeek &&
+    firstWeekAvg - minEntry.avg >= 0.5 &&
+    lastWeekAvg - minEntry.avg >= 0.5;
+  const isInvertedV =
+    weekTrends.length >= 3 &&
+    maxEntry.week !== firstWeek &&
+    maxEntry.week !== lastWeek &&
+    maxEntry.avg - firstWeekAvg >= 0.5 &&
+    maxEntry.avg - lastWeekAvg >= 0.5;
   const confidenceTrendSummary =
-    trendDelta > 0.2
-      ? `Student confidence has improved over the course, rising from ${firstWeekAvg.toFixed(1)} in Week ${weekTrends[0]?.week ?? 1} to ${lastWeekAvg.toFixed(1)} in Week ${weekTrends[weekTrends.length - 1]?.week ?? 10}.`
+    isVShape
+      ? `Confidence dipped to ${minEntry.avg.toFixed(1)} in Week ${minEntry.week} before recovering to ${lastWeekAvg.toFixed(1)} in Week ${lastWeek} — a V-shape pattern that often reflects a content-density spike followed by instructional adjustment. The Week ${minEntry.week} dip warrants ongoing monitoring.`
+      : isInvertedV
+      ? `Confidence peaked at ${maxEntry.avg.toFixed(1)} in Week ${maxEntry.week} before declining to ${lastWeekAvg.toFixed(1)} in Week ${lastWeek}. Review whether content complexity increased after Week ${maxEntry.week} and consider additional support.`
+      : trendDelta > 0.2
+      ? `Student confidence has improved over the course, rising from ${firstWeekAvg.toFixed(1)} in Week ${firstWeek} to ${lastWeekAvg.toFixed(1)} in Week ${lastWeek}.`
       : trendDelta < -0.2
-      ? `Student confidence has declined over the course, from ${firstWeekAvg.toFixed(1)} in Week ${weekTrends[0]?.week ?? 1} to ${lastWeekAvg.toFixed(1)} in Week ${weekTrends[weekTrends.length - 1]?.week ?? 10}. Consider reviewing pacing and scaffolding.`
+      ? `Student confidence has declined over the course, from ${firstWeekAvg.toFixed(1)} in Week ${firstWeek} to ${lastWeekAvg.toFixed(1)} in Week ${lastWeek}. Consider reviewing pacing and scaffolding.`
       : `Student confidence has remained relatively stable throughout the course, averaging ${avgConfidence.toFixed(1)} out of 5.`;
 
   const supportNeedsSummary =
