@@ -3,7 +3,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, LineChart, ShieldCheck, User, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CoursePulseLogo } from "@/components/logo";
-import { NyuSeal } from "@/components/nyu-seal";
 
 export default function IndexPage() {
   return (
@@ -125,13 +124,12 @@ export default function IndexPage() {
       {/* Footer — NYU institutional branding */}
       <div className="w-full mt-12 border-t bg-[#57068C]">
         <div className="max-w-5xl mx-auto px-8 py-10 flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
-          {/* NYU seal lockup */}
-          <div className="flex items-center gap-5">
-            <NyuSeal className="w-20 h-20 shrink-0" />
-            <div className="flex flex-col gap-1">
-              <span className="text-white font-bold text-base tracking-wide leading-tight">New York University</span>
-              <span className="text-white/75 text-sm leading-tight">School of Professional Studies</span>
+          {/* NYU logo */}
+          <div className="flex flex-col gap-2">
+            <div className="bg-white rounded px-3 py-2 inline-flex">
+              <img src="/nyu-logo.png" alt="New York University" className="h-10 w-auto" />
             </div>
+            <span className="text-white/75 text-sm">School of Professional Studies</span>
           </div>
 
           {/* Divider — desktop only */}
