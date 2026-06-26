@@ -1,0 +1,43 @@
+# System Architecture Diagram
+
+The current repository implements CoursePulse AI as a TypeScript/pnpm monorepo with a React frontend, Express API, PostgreSQL database, Drizzle ORM schema, server-side classifier, and optional AI-powered syllabus parsing.
+
+## Architecture flow
+
+```text
+Student / Faculty Browser
+        |
+        v
+React + Vite frontend
+artifacts/coursepulse
+        |
+        v
+Express API server
+artifacts/api-server
+        |
+        +--> Reflection route -> rule-based classifier -> classified_signals table
+        |
+        +--> Faculty route -> aggregation/reporting -> dashboard outputs
+        |
+        +--> Course context route -> weekly topics and learning objectives
+        |
+        +--> Syllabus route -> Mammoth text extraction + Anthropic parser
+        |
+        v
+PostgreSQL database via Drizzle ORM
+lib/db/src/schema
+```
+
+## Main layers
+
+| Layer | Implementation |
+|---|---|
+| Presentation | React/Vite, Tailwind, shadcn/ui, Recharts |
+| API | Express 5 route handlers |
+| Classification | `artifacts/api-server/src/lib/classifier.ts` |
+| Persistence | PostgreSQL tables defined in `lib/db/src/schema/` |
+| API contract | OpenAPI in `lib/api-spec/openapi.yaml` and generated clients |
+| Demo data | `scripts/src/seed.ts` and CSV samples in `data/` |
+| Governance | `/governance` page, dashboard banners, aggregate-only reporting |
+
+See `docs/architecture_diagram.png` for a visual version.
